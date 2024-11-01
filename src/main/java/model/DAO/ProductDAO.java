@@ -11,12 +11,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.entity.Product;
 import model.interfaces.DAO.IProductDAO;
+import model.interfaces.connection.IDatabaseConnection;
 
 public class ProductDAO implements IProductDAO {
 
+    private final IDatabaseConnection databaseConnection = new DatabaseConnection();
+
     @Override
     public List<Product> ReadAll() {
-        Connection con = DatabaseConnection.getConnection();
+        Connection con = databaseConnection.GetConnection();
         
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -41,7 +44,7 @@ public class ProductDAO implements IProductDAO {
         } catch (SQLException ex) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            DatabaseConnection.closeConnection(con, stmt, rs);
+            databaseConnection.CloseConnection(con, stmt, rs);
         }
 
         return products;
@@ -49,7 +52,7 @@ public class ProductDAO implements IProductDAO {
     
     @Override
     public List<Product> ReadByName(String name) {
-        Connection con = DatabaseConnection.getConnection();
+        Connection con = databaseConnection.GetConnection();
         
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -76,7 +79,7 @@ public class ProductDAO implements IProductDAO {
         } catch (SQLException ex) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            DatabaseConnection.closeConnection(con, stmt, rs);
+            databaseConnection.CloseConnection(con, stmt, rs);
         }
 
         return products;

@@ -8,12 +8,15 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.interfaces.DAO.IUserDAO;
+import model.interfaces.connection.IDatabaseConnection;
 
 public class UserDAO implements IUserDAO {
 
+    private final IDatabaseConnection databaseConnection = new DatabaseConnection();
+
     @Override
     public boolean Read(String nome, String senha) {
-        Connection con = DatabaseConnection.getConnection();
+        Connection con = databaseConnection.GetConnection();
         
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -32,7 +35,7 @@ public class UserDAO implements IUserDAO {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
         } 
         finally {
-             DatabaseConnection.closeConnection(con, stmt, rs);
+            databaseConnection.CloseConnection(con, stmt, rs);
         }
         
         return false;
@@ -40,7 +43,7 @@ public class UserDAO implements IUserDAO {
     
     @Override
      public boolean Create(String name, String email, String password) {
-        Connection con = DatabaseConnection.getConnection();
+        Connection con = databaseConnection.GetConnection();
         PreparedStatement stmt = null;
         int rs;
 
@@ -59,7 +62,7 @@ public class UserDAO implements IUserDAO {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
         } 
         finally {
-             DatabaseConnection.closeConnection(con, stmt);
+            databaseConnection.CloseConnection(con, stmt);
         }
         
         return false;

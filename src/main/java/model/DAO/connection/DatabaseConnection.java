@@ -9,14 +9,16 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DatabaseConnection {
+import model.interfaces.connection.IDatabaseConnection;
+
+public class DatabaseConnection implements IDatabaseConnection {
 
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static final String URL = "jdbc:mysql://localhost:3306/loja_online";
     private static final String USER = "root";
     private static final String PASSWORD = "admin";
 
-    public static Connection getConnection() {
+    public Connection GetConnection() {
         try {
             Class.forName(DRIVER);
             return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -25,7 +27,7 @@ public class DatabaseConnection {
         }
     }
 
-    public static void closeConnection(Connection con) {
+    public void CloseConnection(Connection con) {
         try {
             if (con != null) {
                 con.close();
@@ -35,9 +37,8 @@ public class DatabaseConnection {
         }
     }
 
-    public static void closeConnection(Connection con, PreparedStatement stmt) {
-
-        closeConnection(con);
+    public void CloseConnection(Connection con, PreparedStatement stmt) {
+        CloseConnection(con);
 
         try {
 
@@ -50,9 +51,8 @@ public class DatabaseConnection {
         }
     }
 
-    public static void closeConnection(Connection con, PreparedStatement stmt, ResultSet rs) {
-
-        closeConnection(con, stmt);
+    public void CloseConnection(Connection con, PreparedStatement stmt, ResultSet rs) {
+        CloseConnection(con, stmt);
 
         try {
 

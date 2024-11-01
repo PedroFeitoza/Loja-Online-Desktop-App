@@ -1,16 +1,17 @@
 package controller;
 
+import controller.interfaces.IUserController;
 import model.DAO.UserDAO;
+import model.interfaces.DAO.IUserDAO;
 
-public class UserController {
+public class UserController implements IUserController {
+    private final IUserDAO DAO = new UserDAO();   
 
-    public boolean login(String name, String password) {
-        var dao = new UserDAO();
-        return dao.loginUser(name, password);
+    public boolean Login(String name, String password) {
+        return DAO.Read(name, password);
     }
     
-    public boolean register(String name, String email, String password) {
-        var dao = new UserDAO();
-        return dao.registerUser(name, email, password);
+    public boolean Register(String name, String email, String password) {
+        return DAO.Create(name, email, password);
     }
 }
