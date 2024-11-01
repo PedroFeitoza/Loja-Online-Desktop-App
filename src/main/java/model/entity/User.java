@@ -1,11 +1,11 @@
-package model;
+package model.entity;
 
 //Dados do User
 public class User {
+    private int id;
     private String nome;
     private String email;
     private String senha;
-    private int id;
 
     // Constructor
     public User(String oNome, String oEmail, String aSenha, int oId) {

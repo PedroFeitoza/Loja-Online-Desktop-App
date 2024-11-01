@@ -1,5 +1,6 @@
 package model.DAO;
 
+import model.DAO.connection.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,12 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Product;
+import model.entity.Product;
+import model.interfaces.DAO.IProductDAO;
 
-public class ProductDAO {
+public class ProductDAO implements IProductDAO {
 
-
-    public List<Product> read() {
+    @Override
+    public List<Product> ReadAll() {
         Connection con = DatabaseConnection.getConnection();
         
         PreparedStatement stmt = null;
@@ -45,7 +47,8 @@ public class ProductDAO {
         return products;
     }
     
-    public List<Product> readByName(String name) {
+    @Override
+    public List<Product> ReadByName(String name) {
         Connection con = DatabaseConnection.getConnection();
         
         PreparedStatement stmt = null;

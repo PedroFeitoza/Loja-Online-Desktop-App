@@ -17,7 +17,7 @@ import static javax.swing.SwingConstants.CENTER;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
-import model.Product;
+import model.entity.Product;
 
 /**
  *
@@ -241,10 +241,12 @@ public class Home extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtFieldSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFieldSearchKeyReleased
-        ProductController pdao = new ProductController();
+        ProductController controller = new ProductController();
+        
         DefaultTableModel modelo = (DefaultTableModel) jTableProduct.getModel();
         modelo.setNumRows(0);
-        produtos = pdao.GetByName(txtFieldSearch.getText());
+
+        produtos = controller.GetByName(txtFieldSearch.getText());
 
         for (Product p : produtos) {
             modelo.addRow(new Object[] {

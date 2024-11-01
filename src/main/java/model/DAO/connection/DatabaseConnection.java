@@ -1,5 +1,5 @@
 
-package model.DAO;
+package model.DAO.connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
