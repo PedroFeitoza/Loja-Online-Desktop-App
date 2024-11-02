@@ -1,5 +1,10 @@
 package view;
 
+import javax.swing.JOptionPane;
+
+import controller.UserController;
+import controller.interfaces.IUserController;
+
 public class Login extends javax.swing.JFrame {
 
     /**
@@ -114,15 +119,25 @@ public class Login extends javax.swing.JFrame {
 
     private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
         // TODO add your handling code here:
-        
+ 
         
         
     }//GEN-LAST:event_btn_loginActionPerformed
 
     private void btn_loginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_loginMouseClicked
-        Home homePage = new Home();
-        homePage.setVisible(true);
-        this.dispose();
+        String usuario = TXTLogin.getText();
+        String senha = TXTSenha.getText();
+        IUserController controller = new UserController();
+        
+        if(controller.Login(usuario, senha)) {
+            Home homePage = new Home();
+            homePage.setVisible(true);
+            this.dispose();
+        }
+        else 
+        {
+            JOptionPane.showMessageDialog(this, "Usuário Incorreto!", "Erro", ERROR);
+        }
     }//GEN-LAST:event_btn_loginMouseClicked
 
     private void TXTLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTLoginActionPerformed
