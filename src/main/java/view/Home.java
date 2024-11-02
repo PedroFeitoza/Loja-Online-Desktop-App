@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package view;
 
 import controller.CartController;
@@ -21,16 +17,23 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import model.entity.Product;
 
-/**
- *
- * @author Pedro_Lindao
- */
 public class Home extends javax.swing.JFrame {
 
-    private List<Product> produtos;// Lista para armazenar os produtos
-
+    private List<Product> produtos;
+    private List<Product> produtosCart;
+    private int userId;
+    
+    public int getUserId() {
+        return this.userId;
+    }
+    
     public Home() {
         initComponents();
+    }
+    
+    public Home(int userId) {
+        initComponents();
+        this.userId = userId;
         DefaultTableModel tableModelProduct = (DefaultTableModel) jTableProduct.getModel();
         jTableProduct.setRowSorter(new TableRowSorter(tableModelProduct));
         for (int i = 0; i < 40; i++) {
@@ -44,11 +47,11 @@ public class Home extends javax.swing.JFrame {
         // Define o renderer e editor da coluna de ação
         jTableProduct.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer()); // Coluna de logo
         jTableProduct.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
-        jTableProduct.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor());
+        jTableProduct.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(this));
 
         jTableCart.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer()); // Coluna de logo
         jTableCart.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
-        jTableCart.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor());
+        jTableCart.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(this));
 
         readJTable();
         readJTableCart();
@@ -56,6 +59,10 @@ public class Home extends javax.swing.JFrame {
 
     public void updateProductTable() {
         readJTable(); // Recarrega a tabela
+    }
+    
+     public void updateCartTable() {
+        readJTableCart(); // Recarrega a tabela
     }
 
     // Renderer para exibir imagens na coluna da tabela
@@ -102,9 +109,9 @@ public class Home extends javax.swing.JFrame {
         modelo.setNumRows(0);
         ICartController controller = new CartController();
 
-        produtos = controller.GetAll(1);
+        produtosCart = controller.GetAll(this.userId);
 
-        for (Product p : produtos) {
+        for (Product p : produtosCart) {
             modelo.addRow(new Object[]{
                 p.getId(),
                 p.getImagePath(),
@@ -117,7 +124,7 @@ public class Home extends javax.swing.JFrame {
     }
 
     // Método para obter o produto da linha
-    private Product getProductAtRow(int row) {
+    public Product getProductAtRow(int row) {
         return produtos.get(row);
     }
 
@@ -572,7 +579,7 @@ public class Home extends javax.swing.JFrame {
         private final JButton btnCompra = new JButton("Comprar");
         private final JButton btnCarrinho = new JButton("Carrinho");
 
-        public ButtonEditor() {
+        public ButtonEditor(Home home) {
             panel.setLayout(new FlowLayout(FlowLayout.CENTER));
             panel.add(btnCompra);
             panel.add(btnCarrinho);
@@ -580,14 +587,17 @@ public class Home extends javax.swing.JFrame {
             // Configura os eventos de ação dos botões
             btnCompra.addActionListener((ActionEvent e) -> {
                 int row = jTableProduct.getSelectedRow();
-                Product produto = getProductAtRow(row); // Obter o produto
+                Product produto = home.getProductAtRow(row); // Obter o produto
                 JOptionPane.showMessageDialog(panel, "Comprando: " + produto.getName());
                 stopCellEditing();
             });
 
             btnCarrinho.addActionListener((ActionEvent e) -> {
                 int row = jTableProduct.getSelectedRow();
-                Product produto = getProductAtRow(row); // Obter o produto
+                Product produto = home.getProductAtRow(row); // Obter o produto
+                ICartController controller = new CartController();
+                controller.Add(home.getUserId(), produto.getId());
+                home.updateCartTable();
                 JOptionPane.showMessageDialog(panel, "Adicionado ao carrinho: " + produto.getName());
                 stopCellEditing();
             });

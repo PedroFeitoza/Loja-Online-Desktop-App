@@ -4,5 +4,8 @@ import java.util.List;
 import model.entity.Product;
 
 public interface ICartDAO {
+
     public List<Product> ReadByUserId(int userId);
+
+    public int Create(int userId, int productId);
 }

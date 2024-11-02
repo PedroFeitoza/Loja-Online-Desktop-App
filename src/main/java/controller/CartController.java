@@ -13,5 +13,11 @@ public class CartController implements ICartController {
     @Override
     public List<Product> GetAll(int idUser) {
         return DAO.ReadByUserId(idUser);
-    }   
+    }
+
+    @Override
+    public int Add(int idUser, int idProduct) {
+        return DAO.Create(idUser, idProduct);
+    }
+    
 }

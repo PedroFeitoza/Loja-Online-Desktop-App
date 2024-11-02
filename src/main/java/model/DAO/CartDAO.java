@@ -27,10 +27,10 @@ public class CartDAO implements ICartDAO {
         List<Product> products = new ArrayList<>();
 
         try {
-            String query = ("SELECT product.id, product.imagePath, product.name, product.description, product.price\n" +
-                    "FROM product\n" +
-                    "INNER JOIN cart on product.id = cart.id_product\n" +
-                    "WHERE cart.id_user = ?;");
+            String query = ("SELECT product.id, product.imagePath, product.name, product.description, product.price\n"
+                    + "FROM product\n"
+                    + "INNER JOIN cart on product.id = cart.id_product\n"
+                    + "WHERE cart.id_user = ?;");
 
             stmt = con.prepareStatement(query);
             stmt.setInt(1, userId);
@@ -54,5 +54,29 @@ public class CartDAO implements ICartDAO {
         }
 
         return products;
+    }
+
+    @Override
+    public int Create(int userId, int productId) {
+        Connection con = databaseConnection.GetConnection();
+
+        PreparedStatement stmt = null;
+        int rs = 0;
+
+        try {
+            String query = ("INSERT INTO cart(id, id_product, id_user) VALUES(0,?,?)");
+
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, productId);
+            stmt.setInt(2, userId);
+            rs = stmt.executeUpdate();
+            return rs;
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            databaseConnection.CloseConnection(con, stmt);
+        }
+
+        return rs;
     }
 }
