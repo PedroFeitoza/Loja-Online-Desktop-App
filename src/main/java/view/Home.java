@@ -4,15 +4,17 @@
  */
 package view;
 
+import controller.CartController;
 import controller.ProductController;
+import controller.interfaces.ICartController;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
+import java.beans.PropertyVetoException;
 import java.util.List;
-import javax.imageio.ImageIO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javax.swing.SwingConstants.CENTER;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -29,22 +31,38 @@ public class Home extends javax.swing.JFrame {
 
     public Home() {
         initComponents();
-        DefaultTableModel modelo = (DefaultTableModel) jTableProduct.getModel();
-        jTableProduct.setRowSorter(new TableRowSorter(modelo));
+        DefaultTableModel tableModelProduct = (DefaultTableModel) jTableProduct.getModel();
+        jTableProduct.setRowSorter(new TableRowSorter(tableModelProduct));
+        for (int i = 0; i < 40; i++) {
+            list1.add("GAME");        // TODO add your handling code here:
+
+        }
+
+        DefaultTableModel tableModelCart = (DefaultTableModel) jTableCart.getModel();
+        jTableCart.setRowSorter(new TableRowSorter(tableModelCart));
 
         // Define o renderer e editor da coluna de ação
         jTableProduct.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer()); // Coluna de logo
         jTableProduct.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
         jTableProduct.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor());
 
+        jTableCart.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer()); // Coluna de logo
+        jTableCart.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+        jTableCart.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor());
+
         readJTable();
+        readJTableCart();
+    }
+
+    public void updateProductTable() {
+        readJTable(); // Recarrega a tabela
     }
 
     // Renderer para exibir imagens na coluna da tabela
     private static class ImageRenderer extends JLabel implements TableCellRenderer {
+
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-                int row, int column) {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             // Caminho relativo para a pasta resources
             String imagePath = "/images/" + value;
 
@@ -52,7 +70,7 @@ public class Home extends javax.swing.JFrame {
             ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
 
             // Ajuste a imagem para caber na célula
-            Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+            Image scaledImage = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
             setIcon(new ImageIcon(scaledImage));
             setHorizontalAlignment(CENTER);
 
@@ -68,13 +86,32 @@ public class Home extends javax.swing.JFrame {
         produtos = pdao.GetAll();
 
         for (Product p : produtos) {
-            modelo.addRow(new Object[] {
-                    p.getId(),
-                    p.getImagePath(),
-                    p.getName(),
-                    p.getDescription(),
-                    p.getPrice(),
-                    "Ações"
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getImagePath(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                "Ações"
+            });
+        }
+    }
+
+    private void readJTableCart() {
+        DefaultTableModel modelo = (DefaultTableModel) jTableCart.getModel();
+        modelo.setNumRows(0);
+        ICartController controller = new CartController();
+
+        produtos = controller.GetAll(1);
+
+        for (Product p : produtos) {
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getImagePath(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                "Ações"
             });
         }
     }
@@ -98,14 +135,29 @@ public class Home extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        pnl_home = new javax.swing.JPanel();
+        jPanelBody = new javax.swing.JPanel();
+        jPanelHeader = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanelHome = new javax.swing.JPanel();
+        jTabbedPnlHome = new javax.swing.JTabbedPane();
+        jPanelStore = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProduct = new javax.swing.JTable();
-        jToolBar1 = new javax.swing.JToolBar();
-        jButton2 = new javax.swing.JButton();
         txtFieldSearch = new javax.swing.JTextField();
-        jTabbedPane3 = new javax.swing.JTabbedPane();
+        jPanelCategory = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        list1 = new java.awt.List();
+        jLabel4 = new javax.swing.JLabel();
+        jPanelCart = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableCart = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItemAdminAddBtn = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -149,10 +201,34 @@ public class Home extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
 
-        pnl_home.setMaximumSize(new java.awt.Dimension(1280, 720));
-        pnl_home.setMinimumSize(new java.awt.Dimension(1280, 720));
-        pnl_home.setPreferredSize(new java.awt.Dimension(1280, 720));
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/header.png"))); // NOI18N
 
+        javax.swing.GroupLayout jPanelHeaderLayout = new javax.swing.GroupLayout(jPanelHeader);
+        jPanelHeader.setLayout(jPanelHeaderLayout);
+        jPanelHeaderLayout.setHorizontalGroup(
+            jPanelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1366, Short.MAX_VALUE)
+            .addGroup(jPanelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelHeaderLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel3)
+                    .addContainerGap(16, Short.MAX_VALUE)))
+        );
+        jPanelHeaderLayout.setVerticalGroup(
+            jPanelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 329, Short.MAX_VALUE)
+            .addGroup(jPanelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelHeaderLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(16, Short.MAX_VALUE)))
+        );
+
+        jPanelStore.setMaximumSize(new java.awt.Dimension(1280, 720));
+        jPanelStore.setMinimumSize(new java.awt.Dimension(1280, 720));
+        jPanelStore.setPreferredSize(new java.awt.Dimension(1280, 720));
+
+        jTableProduct.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jTableProduct.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -179,86 +255,286 @@ public class Home extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTableProduct.setAutoscrolls(false);
         jTableProduct.setRowHeight(100);
+        jTableProduct.setShowGrid(false);
+        jTableProduct.setShowHorizontalLines(true);
         jScrollPane1.setViewportView(jTableProduct);
 
-        jToolBar1.setRollover(true);
-
-        jButton2.setText("admin");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton2);
-
         txtFieldSearch.setToolTipText("Procure por um nome de jogo");
+        txtFieldSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFieldSearchActionPerformed(evt);
+            }
+        });
         txtFieldSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtFieldSearchKeyReleased(evt);
             }
         });
 
-        javax.swing.GroupLayout pnl_homeLayout = new javax.swing.GroupLayout(pnl_home);
-        pnl_home.setLayout(pnl_homeLayout);
-        pnl_homeLayout.setHorizontalGroup(
-            pnl_homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(pnl_homeLayout.createSequentialGroup()
-                .addGap(123, 123, 123)
-                .addGroup(pnl_homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jLabel2.setText("categories");
+
+        list1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                list1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelCategoryLayout = new javax.swing.GroupLayout(jPanelCategory);
+        jPanelCategory.setLayout(jPanelCategoryLayout);
+        jPanelCategoryLayout.setHorizontalGroup(
+            jPanelCategoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCategoryLayout.createSequentialGroup()
+                .addGroup(jPanelCategoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelCategoryLayout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanelCategoryLayout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelCategoryLayout.setVerticalGroup(
+            jPanelCategoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCategoryLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(27, 27, 27)
+                .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel4.setText("Find a Game");
+
+        javax.swing.GroupLayout jPanelStoreLayout = new javax.swing.GroupLayout(jPanelStore);
+        jPanelStore.setLayout(jPanelStoreLayout);
+        jPanelStoreLayout.setHorizontalGroup(
+            jPanelStoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelStoreLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanelStoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addGroup(pnl_homeLayout.createSequentialGroup()
-                        .addComponent(txtFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGroup(jPanelStoreLayout.createSequentialGroup()
+                        .addGroup(jPanelStoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(0, 562, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        pnl_homeLayout.setVerticalGroup(
-            pnl_homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnl_homeLayout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
+        jPanelStoreLayout.setVerticalGroup(
+            jPanelStoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelStoreLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(101, 101, 101))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(216, Short.MAX_VALUE))
+            .addComponent(jPanelCategory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Loja", pnl_home);
-        jTabbedPane1.addTab("Cart", jTabbedPane3);
+        jTabbedPnlHome.addTab("Store", jPanelStore);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1793, Short.MAX_VALUE)
+        jPanelCart.setMaximumSize(new java.awt.Dimension(1280, 720));
+        jPanelCart.setMinimumSize(new java.awt.Dimension(1280, 720));
+
+        jTableCart.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Id", "Logo", "Nome", "Descrição", "Valor", "Ação"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableCart.setRowHeight(100);
+        jScrollPane2.setViewportView(jTableCart);
+
+        jLabel5.setText("VOCÊ ESTÁ COMPRANDO");
+
+        jButton2.setText("BUY");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelCartLayout = new javax.swing.GroupLayout(jPanelCart);
+        jPanelCart.setLayout(jPanelCartLayout);
+        jPanelCartLayout.setHorizontalGroup(
+            jPanelCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCartLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1255, Short.MAX_VALUE)
+                .addGap(105, 105, 105))
+            .addGroup(jPanelCartLayout.createSequentialGroup()
+                .addGroup(jPanelCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelCartLayout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jLabel5))
+                    .addGroup(jPanelCartLayout.createSequentialGroup()
+                        .addGap(583, 583, 583)
+                        .addComponent(jButton2)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+        jPanelCartLayout.setVerticalGroup(
+            jPanelCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCartLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jLabel5)
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(jButton2)
+                .addContainerGap(173, Short.MAX_VALUE))
         );
+
+        jTabbedPnlHome.addTab("Cart", jPanelCart);
+
+        javax.swing.GroupLayout jPanelHomeLayout = new javax.swing.GroupLayout(jPanelHome);
+        jPanelHome.setLayout(jPanelHomeLayout);
+        jPanelHomeLayout.setHorizontalGroup(
+            jPanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPnlHome)
+        );
+        jPanelHomeLayout.setVerticalGroup(
+            jPanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelHomeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPnlHome)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanelBodyLayout = new javax.swing.GroupLayout(jPanelBody);
+        jPanelBody.setLayout(jPanelBodyLayout);
+        jPanelBodyLayout.setHorizontalGroup(
+            jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelBodyLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelBodyLayout.createSequentialGroup()
+                    .addComponent(jPanelHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        jPanelBodyLayout.setVerticalGroup(
+            jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelBodyLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(651, Short.MAX_VALUE))
+            .addGroup(jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelBodyLayout.createSequentialGroup()
+                    .addGap(354, 354, 354)
+                    .addComponent(jPanelHome, javax.swing.GroupLayout.PREFERRED_SIZE, 626, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+
+        getContentPane().add(jPanelBody, java.awt.BorderLayout.CENTER);
+
+        jMenu1.setText("ADMIN");
+
+        jMenuItemAdminAddBtn.setText("Adicionar Produto");
+        jMenuItemAdminAddBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenuItemAdminAddBtnMouseClicked(evt);
+            }
+        });
+        jMenuItemAdminAddBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemAdminAddBtnActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemAdminAddBtn);
+
+        jMenuItem2.setText("Alterar Produto");
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem3.setText("Remover Produto");
+        jMenu1.add(jMenuItem3);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jMenuItemAdminAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAdminAddBtnActionPerformed
+        // TODO add your handling code here:
+        ProductManager manager = new ProductManager(this);
+        jLabel3.add(manager);
+        manager.setVisible(true);
+
+        manager.toFront();
+        // Traz o JInternalFrame para frente
+        try {
+            manager.setSelected(true);// Traz o JInternalFrame para frente
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // Dá o foco ao JInternalFrame
+
+    }//GEN-LAST:event_jMenuItemAdminAddBtnActionPerformed
+
+    private void jMenuItemAdminAddBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItemAdminAddBtnMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemAdminAddBtnMouseClicked
+
+    private void list1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list1ActionPerformed
+
+    }//GEN-LAST:event_list1ActionPerformed
+
     private void txtFieldSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFieldSearchKeyReleased
         ProductController controller = new ProductController();
-        
+
         DefaultTableModel modelo = (DefaultTableModel) jTableProduct.getModel();
         modelo.setNumRows(0);
 
         produtos = controller.GetByName(txtFieldSearch.getText());
 
         for (Product p : produtos) {
-            modelo.addRow(new Object[] {
-                    p.getId(),
-                    p.getImagePath(),
-                    p.getName(),
-                    p.getDescription(),
-                    p.getPrice(),
-                    "Ações"
+            modelo.addRow(new Object[]{
+                p.getId(),
+                p.getImagePath(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                "Ações"
             });
         }
     }//GEN-LAST:event_txtFieldSearchKeyReleased
+
+    private void txtFieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFieldSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFieldSearchActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -333,14 +609,29 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItemAdminAddBtn;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelBody;
+    private javax.swing.JPanel jPanelCart;
+    private javax.swing.JPanel jPanelCategory;
+    private javax.swing.JPanel jPanelHeader;
+    private javax.swing.JPanel jPanelHome;
+    private javax.swing.JPanel jPanelStore;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPnlHome;
+    private javax.swing.JTable jTableCart;
     private javax.swing.JTable jTableProduct;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JPanel pnl_home;
+    private java.awt.List list1;
     private javax.swing.JTextField txtFieldSearch;
     // End of variables declaration//GEN-END:variables
 }
