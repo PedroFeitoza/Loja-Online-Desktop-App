@@ -38,27 +38,28 @@ public class Register extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollBar1 = new javax.swing.JScrollBar();
+
+        jPanel1.setBackground(new java.awt.Color(3, 97, 91));
+        jPanel1.setMaximumSize(new java.awt.Dimension(524, 387));
+        jPanel1.setMinimumSize(new java.awt.Dimension(524, 387));
+        jPanel1.setLayout(new java.awt.GridLayout());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(3, 97, 91));
-        setMaximumSize(new java.awt.Dimension(524, 387));
-        setMinimumSize(new java.awt.Dimension(524, 387));
-        setPreferredSize(new java.awt.Dimension(524, 387));
+        setMaximumSize(new java.awt.Dimension(525, 420));
+        setMinimumSize(new java.awt.Dimension(525, 420));
+        setPreferredSize(new java.awt.Dimension(525, 420));
+        setResizable(false);
         getContentPane().setLayout(null);
 
-        jPanel1.setBackground(new java.awt.Color(3, 97, 91));
-        jPanel1.setMinimumSize(new java.awt.Dimension(542, 336));
-        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 5, 0, 376);
-
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Novo Cadastro");
         getContentPane().add(jLabel2);
         jLabel2.setBounds(216, 118, 101, 20);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Nome de Usuário");
         getContentPane().add(jLabel3);
         jLabel3.setBounds(208, 162, 117, 20);
@@ -69,12 +70,13 @@ public class Register extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(212, 194, 100, 28);
+        jTextField1.setBounds(180, 190, 160, 22);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("EMAIL");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(242, 222, 41, 20);
+        jLabel4.setBounds(240, 220, 40, 20);
 
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -82,14 +84,15 @@ public class Register extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField2);
-        jTextField2.setBounds(185, 248, 154, 28);
+        jTextField2.setBounds(180, 250, 160, 22);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Senha");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(243, 276, 40, 20);
+        jLabel5.setBounds(240, 275, 37, 20);
         getContentPane().add(jPasswordField1);
-        jPasswordField1.setBounds(212, 302, 100, 28);
+        jPasswordField1.setBounds(180, 300, 160, 22);
 
         jButton1.setText("VOLTAR");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -117,8 +120,6 @@ public class Register extends javax.swing.JFrame {
         jLabel1.setText("jLabel1");
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 520, 390);
-        getContentPane().add(jScrollBar1);
-        jScrollBar1.setBounds(510, 10, 15, 48);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -188,7 +189,6 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
