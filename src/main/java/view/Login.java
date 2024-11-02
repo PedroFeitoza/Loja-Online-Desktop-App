@@ -129,14 +129,15 @@ public class Login extends javax.swing.JFrame {
         String senha = TXTSenha.getText();
         IUserController controller = new UserController();
         
-        if(controller.Login(usuario, senha)) {
-            Home homePage = new Home();
+        int userId = controller.Login(usuario, senha); 
+        if(userId > 0) {
+            Home homePage = new Home(userId);
             homePage.setVisible(true);
             this.dispose();
         }
         else 
         {
-            JOptionPane.showMessageDialog(this, "Usuário Incorreto!", "Erro", ERROR);
+            JOptionPane.showMessageDialog(this, "Usuário Incorreto!");
         }
     }//GEN-LAST:event_btn_loginMouseClicked
 

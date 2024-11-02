@@ -1,16 +1,22 @@
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\controller\interfaces\IProductController.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\controller\interfaces\IUserController.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\controller\ProductController.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\controller\UserController.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\model\DAO\connection\DatabaseConnection.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\model\DAO\ProductDAO.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\model\DAO\UserDAO.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\model\entity\Product.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\model\entity\User.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\model\interfaces\connection\IDatabaseConnection.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\model\interfaces\DAO\IProductDAO.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\model\interfaces\DAO\IUserDAO.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\view\Home.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\view\Login.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\view\ProductView.java
-C:\Users\bruno\OneDrive\Área de Trabalho\trabalhos bruno\APSNETBEENS\Loja-Online-Desktop-App\src\main\java\view\Register.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\controller\CartController.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\controller\interfaces\ICartController.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\controller\interfaces\IProductController.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\controller\interfaces\IUserController.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\controller\ProductController.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\controller\UserController.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\DAO\CartDAO.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\DAO\connection\DatabaseConnection.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\DAO\ProductDAO.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\DAO\UserDAO.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\entity\Cart.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\entity\Product.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\entity\User.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\interfaces\connection\IDatabaseConnection.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\interfaces\DAO\ICartDAO.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\interfaces\DAO\IProductDAO.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\model\interfaces\DAO\IUserDAO.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\view\Home.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\view\Login.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\view\PopupFrame.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\view\ProductManager.java
+C:\Users\Pedro_Lindao\Desktop\Github\Loja-Online-Desktop-App\src\main\java\view\Register.java

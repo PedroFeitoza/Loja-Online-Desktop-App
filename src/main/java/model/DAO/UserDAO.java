@@ -15,34 +15,34 @@ public class UserDAO implements IUserDAO {
     private final IDatabaseConnection databaseConnection = new DatabaseConnection();
 
     @Override
-    public boolean Read(String nome, String senha) {
+    public int Read(String nome, String senha) {
         Connection con = databaseConnection.GetConnection();
-        
+
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
-            String query = "SELECT * FROM user WHERE nome = ? AND senha = ?";
+            String query = "SELECT id FROM user WHERE name = ? AND password = ?";
             stmt = con.prepareStatement(query);
-            stmt.setString(1,nome); 
+            stmt.setString(1, nome);
             stmt.setString(2, senha);
-            
+
             rs = stmt.executeQuery();
 
-            return rs != null;
-        }
-        catch (SQLException ex) {
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException ex) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        finally {
+        } finally {
             databaseConnection.CloseConnection(con, stmt, rs);
         }
-        
-        return false;
+
+        return 0;
     }
-    
+
     @Override
-     public boolean Create(String name, String email, String password) {
+    public boolean Create(String name, String email, String password) {
         Connection con = databaseConnection.GetConnection();
         PreparedStatement stmt = null;
         int rs;
@@ -50,21 +50,19 @@ public class UserDAO implements IUserDAO {
         try {
             String query = "INSERT INTO user VALUES(0, ?,?,?);";
             stmt = con.prepareStatement(query);
-            stmt.setString(2,name); 
-            stmt.setString(3,email);
-            stmt.setString(4,password);
-            
+            stmt.setString(2, name);
+            stmt.setString(3, email);
+            stmt.setString(4, password);
+
             rs = stmt.executeUpdate();
 
             return rs != 0;
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        finally {
+        } finally {
             databaseConnection.CloseConnection(con, stmt);
         }
-        
+
         return false;
     }
 

@@ -7,7 +7,7 @@ import model.interfaces.DAO.IUserDAO;
 public class UserController implements IUserController {
     private final IUserDAO DAO = new UserDAO();   
 
-    public boolean Login(String name, String password) {
+    public int Login(String name, String password) {
         return DAO.Read(name, password);
     }
     
