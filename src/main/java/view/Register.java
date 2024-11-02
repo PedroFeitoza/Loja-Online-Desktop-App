@@ -49,19 +49,19 @@ public class Register extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(3, 97, 91));
         jPanel1.setMinimumSize(new java.awt.Dimension(542, 336));
-        jPanel1.setLayout(new java.awt.GridLayout());
+        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 5, 542, 376);
+        jPanel1.setBounds(0, 5, 0, 376);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Novo Cadastro");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(216, 118, 92, 20);
+        jLabel2.setBounds(216, 118, 101, 20);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Nome de Usuário");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(208, 162, 107, 20);
+        jLabel3.setBounds(208, 162, 117, 20);
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -69,12 +69,12 @@ public class Register extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField1);
-        jTextField1.setBounds(212, 194, 100, 22);
+        jTextField1.setBounds(212, 194, 100, 28);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("EMAIL");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(242, 222, 40, 20);
+        jLabel4.setBounds(242, 222, 41, 20);
 
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -82,22 +82,32 @@ public class Register extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jTextField2);
-        jTextField2.setBounds(185, 248, 154, 22);
+        jTextField2.setBounds(185, 248, 154, 28);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Senha");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(243, 276, 37, 20);
+        jLabel5.setBounds(243, 276, 40, 20);
         getContentPane().add(jPasswordField1);
-        jPasswordField1.setBounds(212, 302, 100, 22);
+        jPasswordField1.setBounds(212, 302, 100, 28);
 
         jButton1.setText("VOLTAR");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
         getContentPane().add(jButton1);
-        jButton1.setBounds(30, 336, 73, 23);
+        jButton1.setBounds(30, 336, 74, 28);
 
         jButton2.setText("CONTINUAR");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
         getContentPane().add(jButton2);
-        jButton2.setBounds(397, 336, 97, 23);
+        jButton2.setBounds(397, 336, 99, 28);
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo100x100.png"))); // NOI18N
         getContentPane().add(jLabel6);
@@ -108,7 +118,7 @@ public class Register extends javax.swing.JFrame {
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 520, 390);
         getContentPane().add(jScrollBar1);
-        jScrollBar1.setBounds(510, 10, 10, 48);
+        jScrollBar1.setBounds(510, 10, 15, 48);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -120,6 +130,17 @@ public class Register extends javax.swing.JFrame {
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        Login loginPage = new Login();
+        loginPage.setVisible(true);
+        this.dispose();    }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        Login loginPage = new Login();
+        loginPage.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2MouseClicked
 
     /**
      * @param args the command line arguments

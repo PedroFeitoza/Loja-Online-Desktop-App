@@ -10,13 +10,10 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    
-    
     public Login() {
         initComponents();
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -119,24 +116,21 @@ public class Login extends javax.swing.JFrame {
 
     private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
         // TODO add your handling code here:
- 
-        
-        
+
+
     }//GEN-LAST:event_btn_loginActionPerformed
 
     private void btn_loginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_loginMouseClicked
         String usuario = TXTLogin.getText();
         String senha = TXTSenha.getText();
         IUserController controller = new UserController();
-        
-        int userId = controller.Login(usuario, senha); 
-        if(userId > 0) {
+
+        int userId = controller.Login(usuario, senha);
+        if (userId > 0) {
             Home homePage = new Home(userId);
             homePage.setVisible(true);
             this.dispose();
-        }
-        else 
-        {
+        } else {
             JOptionPane.showMessageDialog(this, "Usuário Incorreto!");
         }
     }//GEN-LAST:event_btn_loginMouseClicked
@@ -146,7 +140,9 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_TXTLoginActionPerformed
 
     private void btn_login1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_login1MouseClicked
-        // TODO add your handling code here:
+        Register registerPage = new Register();
+        registerPage.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btn_login1MouseClicked
 
     private void btn_login1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_login1ActionPerformed
@@ -197,6 +193,3 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel pnl_login;
     // End of variables declaration//GEN-END:variables
 }
-
-
-
