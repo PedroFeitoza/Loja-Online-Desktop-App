@@ -94,12 +94,60 @@ public class ProductDAO implements IProductDAO {
         try {
             String sql = "INSERT INTO product(id, imagePath, name, description, price) VALUES(0,?,?,?,?);";
             stmt = con.prepareStatement(sql);
-            stmt.setString(1, imagePath);  // Corrigido: campo imagePath é o primeiro parâmetro
-            stmt.setString(2, name);       // Corrigido: campo name é o segundo parâmetro
+            stmt.setString(1, imagePath);
+            stmt.setString(2, name);
             stmt.setString(3, description);
             stmt.setDouble(4, price);
 
-            rs = stmt.executeUpdate();  // Chamada corrigida para executeUpdate
+            rs = stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            databaseConnection.CloseConnection(con, stmt);
+        }
+
+        return rs;
+    }
+
+    @Override
+    public int Update(int id, String name, String imagePath, String description, double price) {
+        Connection con = databaseConnection.GetConnection();
+        PreparedStatement stmt = null;
+        int rs = 0;
+
+        try {
+            String sql = "UPDATE product SET imagePath = ?, name = ?, description = ?, price = ? WHERE id = ?;";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, imagePath);
+            stmt.setString(2, name);
+            stmt.setString(3, description);
+            stmt.setDouble(4, price);
+            stmt.setInt(5, id);
+
+            rs = stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            databaseConnection.CloseConnection(con, stmt);
+        }
+
+        return rs;
+    }
+
+    @Override
+    public int Delete(int id) {
+        Connection con = databaseConnection.GetConnection();
+        PreparedStatement stmt = null;
+        int rs = 0;
+
+        try {
+            String sql = "DELETE FROM product WHERE id = ?;";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+
+            rs = stmt.executeUpdate();
 
         } catch (SQLException ex) {
             Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);

@@ -6,23 +6,42 @@ package view;
 
 import controller.ProductController;
 import controller.interfaces.IProductController;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import model.enums.Operation;
 
 /**
  *
  * @author Pedro_Lindao
  */
-
 public class ProductManager extends javax.swing.JInternalFrame {
 
-   private Home home;
-    
-    public ProductManager(Home home) {
-         this.home = home;
+    private Home home;
+    private Operation operation;
+
+    public ProductManager(Home home, Operation op) {
+        this.home = home;
         initComponents();
+        this.title += " " + op;
+        this.operation = op;
+
+        switch (op) {
+            case Operation.Add:
+                this.jTextFieldId.setEnabled(false);
+                break;
+            case Operation.Edit:
+                break;
+            case Operation.Delete:
+                this.jTextFieldImage.setEnabled(false);
+                this.jTextFieldDescription.setEnabled(false);
+                this.jTextFieldName.setEnabled(false);
+                this.jTextFieldPrice.setEnabled(false);
+                break;
+            default:
+                throw new AssertionError();
+        }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,10 +49,10 @@ public class ProductManager extends javax.swing.JInternalFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        jButtonSave = new javax.swing.JButton();
         jTextFieldName = new javax.swing.JTextField();
         jTextFieldImage = new javax.swing.JTextField();
         jTextFieldDescription = new javax.swing.JTextField();
@@ -42,21 +61,18 @@ public class ProductManager extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jTextFieldId = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
 
         setClosable(true);
         setTitle("Product Manager");
         setInheritsPopupMenu(true);
         setVisible(true);
 
-        jButton1.setText("Save");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonSave.setText("Save");
+        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonSaveActionPerformed(evt);
             }
         });
 
@@ -80,149 +96,174 @@ public class ProductManager extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Price");
 
+        jTextFieldId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldIdActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Id");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 195,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel3)
-                                                        .addComponent(jLabel1)))
-                                        .addComponent(jTextFieldDescription, javax.swing.GroupLayout.Alignment.TRAILING,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE, 189,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jTextFieldPrice, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        139, Short.MAX_VALUE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jButton1)
-                                                .addGap(22, 22, 22))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jTextFieldImage)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addGroup(layout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(jLabel2)
-                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                .addGap(6, 6, 6)
-                                                                                .addComponent(jLabel4)))
-                                                                .addGap(0, 0, Short.MAX_VALUE)))
-                                                .addGap(6, 6, 6)))));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jTextFieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(128, 128, 128)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextFieldPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonSave)
+                        .addGap(22, 22, 22))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel4)
+                        .addContainerGap(262, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextFieldImage, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jTextFieldImage, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel1)
-                                        .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jTextFieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jTextFieldPrice, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton1))
-                                .addContainerGap(14, Short.MAX_VALUE)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSave))
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
-    // TODO add your handling code here:
-}// GEN-LAST:event_jButton1ActionPerformed
+    private void jTextFieldIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldIdActionPerformed
+
+    private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
+        IProductController controller = new ProductController();
+
+        if (this.operation == Operation.Add || this.operation == Operation.Edit) {
+            if (!validarCampoVazio(jTextFieldName, "Nome do produto é obrigatório!")) {
+                return;
+            }
+            if (!validarCampoVazio(jTextFieldImage, "Imagem do produto é obrigatória!")) {
+                return;
+            }
+            if (!validarCampoVazio(jTextFieldDescription, "Descrição do produto é obrigatória!")) {
+                return;
+            }
+
+            if (!validarCampoVazio(jTextFieldPrice, "Preço do produto é obrigatório!")
+                    || !validarPreco(jTextFieldPrice.getText())) {
+                return;
+            }
+
+            if (this.operation == Operation.Edit) {
+                if (!validarCampoVazio(jTextFieldId, "Id é obrigatório!")) {
+                    return;
+                }
+
+                controller.UpdateProduct(Integer.parseInt(jTextFieldId.getText()), jTextFieldName.getText(), jTextFieldImage.getText(), jTextFieldDescription.getText(), Double.parseDouble(jTextFieldPrice.getText()));
+            }
+            controller.CreateProduct(jTextFieldName.getText(), jTextFieldImage.getText(), jTextFieldDescription.getText(), Double.parseDouble(jTextFieldPrice.getText()));
+        } else if (this.operation == Operation.Delete) {
+            if (!validarCampoVazio(jTextFieldId, "Id é obrigatório!")) {
+                return;
+            }
+            controller.DeleteProduct(Integer.parseInt(jTextFieldId.getText()));
+        }
+        
+        JOptionPane.showMessageDialog(this, "Product updated with success", "Information", JOptionPane.INFORMATION_MESSAGE);
+        this.setVisible(false);
+        this.home.updateProductTable();
+    }
 
     private void jTextFieldNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jTextFieldNameActionPerformed
-    // TODO add your handling code here:
-}// GEN-LAST:event_jTextFieldNameActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_jTextFieldNameActionPerformed
 
     private void jTextFieldImageActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jTextFieldImageActionPerformed
-    // TODO add your handling code here:
-}// GEN-LAST:event_jTextFieldImageActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_jTextFieldImageActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jButton1MouseClicked
-    // Validações de entrada de dados
-    if (!validarCampoVazio(jTextFieldName, "Nome do produto é obrigatório!")) {
-        return;
-    }
-    if (!validarCampoVazio(jTextFieldImage, "Imagem do produto é obrigatória!")) {
-        return;
-    }
-    if (!validarCampoVazio(jTextFieldDescription, "Descrição do produto é obrigatória!")) {
-        return;
-    }
+        // Validações de entrada de dados
 
-    if (!validarCampoVazio(jTextFieldPrice, "Preço do produto é obrigatório!")
-            || !validarPreco(jTextFieldPrice.getText())) {
-        return;
-    }
-
-    IProductController controller = new ProductController();
-    controller.CreateProduct(jTextFieldName.getText(), jTextFieldImage.getText(), jTextFieldDescription.getText(), Double.parseDouble(jTextFieldPrice.getText()));
-    JOptionPane.showMessageDialog(this, "Produto Criado com sucesso", "New Product Added", JOptionPane.INFORMATION_MESSAGE);
-    this.setVisible(false);
-    this.home.updateProductTable();
-}// GEN-LAST:event_jButton1MouseClicked
+    }// GEN-LAST:event_jButton1MouseClicked
 
     // Método para validar campos vazios
     private boolean validarCampoVazio(JTextField campo, String mensagemErro) {
-    if (campo.getText() == null || campo.getText().trim().isEmpty()) {
-        JOptionPane.showMessageDialog(this, mensagemErro, "Erro", JOptionPane.ERROR_MESSAGE);
-        campo.requestFocus();
-        return false;
+        if (campo.getText() == null || campo.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, mensagemErro, "Erro", JOptionPane.ERROR_MESSAGE);
+            campo.requestFocus();
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
     // Método para validar o preço como um número positivo
     private boolean validarPreco(String preco) {
-    try {
-        double valor = Double.parseDouble(preco);
-        if (valor <= 0) {
-            JOptionPane.showMessageDialog(this, "O preço deve ser um valor positivo!", "Erro",
+        try {
+            double valor = Double.parseDouble(preco);
+            if (valor <= 0) {
+                JOptionPane.showMessageDialog(this, "O preço deve ser um valor positivo!", "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+                jTextFieldPrice.requestFocus();
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "O preço deve ser um valor numérico!", "Erro",
                     JOptionPane.ERROR_MESSAGE);
             jTextFieldPrice.requestFocus();
             return false;
         }
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "O preço deve ser um valor numérico!", "Erro",
-                JOptionPane.ERROR_MESSAGE);
-        jTextFieldPrice.requestFocus();
-        return false;
+        return true;
     }
-    return true;
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField jTextFieldDescription;
+    private javax.swing.JTextField jTextFieldId;
     private javax.swing.JTextField jTextFieldImage;
     private javax.swing.JTextField jTextFieldName;
     private javax.swing.JTextField jTextFieldPrice;

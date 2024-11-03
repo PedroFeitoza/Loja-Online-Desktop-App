@@ -15,7 +15,7 @@ public class UserDAO implements IUserDAO {
     private final IDatabaseConnection databaseConnection = new DatabaseConnection();
 
     @Override
-    public int Read(String nome, String senha) {
+    public int Read(String name, String password) {
         Connection con = databaseConnection.GetConnection();
 
         PreparedStatement stmt = null;
@@ -24,8 +24,8 @@ public class UserDAO implements IUserDAO {
         try {
             String query = "SELECT id FROM user WHERE name = ? AND password = ?";
             stmt = con.prepareStatement(query);
-            stmt.setString(1, nome);
-            stmt.setString(2, senha);
+            stmt.setString(1, name);
+            stmt.setString(2, password);
 
             rs = stmt.executeQuery();
 
@@ -42,17 +42,43 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
+    public String ReadById(int userId) {
+        Connection con = databaseConnection.GetConnection();
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            String query = "SELECT name FROM user WHERE id = ?";
+            stmt = con.prepareStatement(query);
+            stmt.setInt(1, userId);
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("name");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            databaseConnection.CloseConnection(con, stmt, rs);
+        }
+
+        return null;
+    }
+
+    @Override
     public boolean Create(String name, String email, String password) {
         Connection con = databaseConnection.GetConnection();
         PreparedStatement stmt = null;
         int rs;
 
         try {
-            String query = "INSERT INTO user VALUES(0, ?,?,?);";
+            String query = "INSERT INTO user VALUES(0,?,?,?);";
             stmt = con.prepareStatement(query);
-            stmt.setString(2, name);
-            stmt.setString(3, email);
-            stmt.setString(4, password);
+            stmt.setString(1, name);
+            stmt.setString(2, email);
+            stmt.setString(3, password);
 
             rs = stmt.executeUpdate();
 
