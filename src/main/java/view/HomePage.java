@@ -9,6 +9,9 @@ import model.dtos.ProductCart;
 import model.entity.Product;
 import model.enums.Operation;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -16,6 +19,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.beans.PropertyVetoException;
+import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +30,7 @@ public class HomePage extends JFrame {
     private List<Product> produtos;
     private List<ProductCart> produtosCart;
     private int userId;
+    private Clip clip;
 
     public HomePage() {
         initComponents();
@@ -37,10 +42,27 @@ public class HomePage extends JFrame {
         configureTableModels();
         configureRenderersAndEditors();
         loadUserAndTableData();
+        playMusic();
     }
 
     public int getUserId() {
         return this.userId;
+    }
+
+    private void playMusic() {
+        try {
+            File musicPath = new File(getClass().getResource("/musics/fundo.wav").getPath());
+
+            if (musicPath.exists()) {
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+                clip = AudioSystem.getClip();
+                clip.open(audioInput);
+                clip.start();
+            }
+        }
+        catch (Exception e) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, e);
+        }
     }
 
     private void configureTableModels() {
@@ -239,7 +261,8 @@ public class HomePage extends JFrame {
         setTitle("STEAM VERDE");
         setBackground(new java.awt.Color(15, 18, 54));
         setMaximumSize(new java.awt.Dimension(1280, 720));
-        setMinimumSize(new java.awt.Dimension(1280, 720));
+        setMinimumSize(new java.awt.Dimension(1366, 768));
+        setPreferredSize(new java.awt.Dimension(1366, 768));
         setResizable(false);
 
         jPanelHome.setBackground(new java.awt.Color(15, 18, 54));
@@ -346,6 +369,7 @@ public class HomePage extends JFrame {
         });
 
         jPanelCategory.setBackground(new java.awt.Color(15, 10, 25));
+        jPanelCategory.setPreferredSize(new java.awt.Dimension(134, 300));
 
         jLabel2.setFont(new java.awt.Font("Candara Light", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -374,7 +398,7 @@ public class HomePage extends JFrame {
                 .addGap(23, 23, 23)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(listCategories, javax.swing.GroupLayout.PREFERRED_SIZE, 453, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(listCategories, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -393,19 +417,21 @@ public class HomePage extends JFrame {
                     .addComponent(txtFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelSearch)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelStoreLayout.setVerticalGroup(
             jPanelStoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelStoreLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabelSearch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(216, Short.MAX_VALUE))
-            .addComponent(jPanelCategory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(jPanelStoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanelCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 484, Short.MAX_VALUE)
+                    .addGroup(jPanelStoreLayout.createSequentialGroup()
+                        .addComponent(jLabelSearch)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(230, Short.MAX_VALUE))
         );
 
         jTabbedPnlHome.addTab("Store", jPanelStore);
@@ -468,7 +494,7 @@ public class HomePage extends JFrame {
             .addGroup(jPanelCartLayout.createSequentialGroup()
                 .addGroup(jPanelCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelCartLayout.createSequentialGroup()
-                        .addGap(462, 462, 462)
+                        .addGap(465, 465, 465)
                         .addComponent(jButtonBuyCart, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelCartLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
@@ -481,10 +507,10 @@ public class HomePage extends JFrame {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonBuyCart, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addGap(10, 10, 10))
         );
 
         jTabbedPnlHome.addTab("Cart", jPanelCart);
@@ -502,10 +528,10 @@ public class HomePage extends JFrame {
         );
         jPanelBodyLayout.setVerticalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelBodyLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBodyLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
         );
 
         javax.swing.GroupLayout jPanelHomeLayout = new javax.swing.GroupLayout(jPanelHome);
@@ -515,7 +541,7 @@ public class HomePage extends JFrame {
             .addGroup(jPanelHomeLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addGap(10, 10, 10))
             .addGroup(jPanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanelHomeLayout.createSequentialGroup()
                     .addComponent(jPanelBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -526,7 +552,7 @@ public class HomePage extends JFrame {
             .addGroup(jPanelHomeLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(602, Short.MAX_VALUE))
+                .addContainerGap(582, Short.MAX_VALUE))
             .addGroup(jPanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanelHomeLayout.createSequentialGroup()
                     .addGap(354, 354, 354)
@@ -695,6 +721,8 @@ public class HomePage extends JFrame {
     }// GEN-LAST:event_jButtonBuyCartActionPerformed
 
     private void jLabelExitMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jLabelExitMouseClicked
+        clip.stop();
+        clip.close();
         LoginPage login = new LoginPage();
         login.setVisible(true);
         this.dispose();
