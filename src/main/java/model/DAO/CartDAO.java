@@ -1,6 +1,10 @@
 package model.DAO;
 
 import model.DAO.connection.DatabaseConnection;
+import model.dtos.ProductCart;
+import model.interfaces.DAO.ICartDAO;
+import model.interfaces.connection.IDatabaseConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,123 +13,100 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.entity.ProductCart;
-import model.interfaces.DAO.ICartDAO;
-import model.interfaces.connection.IDatabaseConnection;
 
 public class CartDAO implements ICartDAO {
 
+    private static final Logger LOGGER = Logger.getLogger(CartDAO.class.getName());
     private final IDatabaseConnection databaseConnection = new DatabaseConnection();
 
     @Override
-    public List<ProductCart> ReadByUserId(int userId) {
-        Connection con = databaseConnection.GetConnection();
-
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-
+    public List<ProductCart> readByUserId(int userId) {
+        String query = """
+                SELECT cart.id_cart, product.id, product.imagePath, product.name, product.description, product.price
+                FROM product
+                INNER JOIN cart ON product.id = cart.id_product
+                WHERE cart.id_user = ?;
+                """;
         List<ProductCart> products = new ArrayList<>();
 
-        try {
-            String query = ("""
-                            SELECT cart.id_cart, product.id, product.imagePath, product.name, product.description, product.price
-                            FROM product
-                            INNER JOIN cart on product.id = cart.id_product
-                            WHERE cart.id_user = ?;""");
+        try (Connection con = databaseConnection.getConnection();
+                PreparedStatement stmt = con.prepareStatement(query)) {
 
-            stmt = con.prepareStatement(query);
             stmt.setInt(1, userId);
-            rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                ProductCart product = new ProductCart();
-                product.setIdCart(rs.getInt("id_cart"));
-                product.setId(rs.getInt("id"));
-                product.setImagePath(rs.getString("imagePath"));
-                product.setName(rs.getString("name"));
-                product.setDescription(rs.getString("description"));
-                product.setPrice(rs.getDouble("price"));
-                products.add(product);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ProductCart product = mapResultSetToProductCart(rs);
+                    products.add(product);
+                }
             }
-
         } catch (SQLException ex) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            databaseConnection.CloseConnection(con, stmt, rs);
+            LOGGER.log(Level.SEVERE, "Error reading products in cart for user with ID: " + userId, ex);
         }
 
         return products;
     }
 
     @Override
-    public int Create(int userId, int productId) {
-        Connection con = databaseConnection.GetConnection();
+    public int create(int userId, int productId) {
+        String query = "INSERT INTO cart (id_product, id_user) VALUES (?, ?)";
 
-        PreparedStatement stmt = null;
-        int rs = 0;
+        try (Connection con = databaseConnection.getConnection();
+                PreparedStatement stmt = con.prepareStatement(query)) {
 
-        try {
-            String query = ("INSERT INTO cart(id_cart, id_product, id_user) VALUES(0,?,?)");
-
-            stmt = con.prepareStatement(query);
             stmt.setInt(1, productId);
             stmt.setInt(2, userId);
-            rs = stmt.executeUpdate();
-            return rs;
+            return stmt.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            databaseConnection.CloseConnection(con, stmt);
+            LOGGER.log(Level.SEVERE, "Error adding product with ID: " + productId + " to user cart with ID: " + userId,
+                    ex);
         }
 
-        return rs;
+        return 0;
     }
 
     @Override
-    public int Delete(int userId) {
-        Connection con = databaseConnection.GetConnection();
+    public int delete(int userId) {
+        String query = "DELETE FROM cart WHERE id_user = ?";
 
-        PreparedStatement stmt = null;
-        int rs = 0;
+        try (Connection con = databaseConnection.getConnection();
+                PreparedStatement stmt = con.prepareStatement(query)) {
 
-        try {
-            String query = ("DELETE FROM cart WHERE id_user = ?");
-
-            stmt = con.prepareStatement(query);
             stmt.setInt(1, userId);
-            rs = stmt.executeUpdate();
-            return rs;
+            return stmt.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            databaseConnection.CloseConnection(con, stmt);
+            LOGGER.log(Level.SEVERE, "Error clearing cart for user with ID: " + userId, ex);
         }
 
-        return rs;
+        return 0;
     }
 
     @Override
-    public int Delete(int idCart, int userId, int productId) {
-        Connection con = databaseConnection.GetConnection();
+    public int delete(int idCart, int userId, int productId) {
+        String query = "DELETE FROM cart WHERE id_cart = ? AND id_user = ? AND id_product = ?";
 
-        PreparedStatement stmt = null;
-        int rs = 0;
+        try (Connection con = databaseConnection.getConnection();
+                PreparedStatement stmt = con.prepareStatement(query)) {
 
-        try {
-            String query = ("DELETE FROM cart WHERE id_cart = ? AND id_user = ? AND id_product = ?");
-
-            stmt = con.prepareStatement(query);
             stmt.setInt(1, idCart);
             stmt.setInt(2, userId);
             stmt.setInt(3, productId);
-            rs = stmt.executeUpdate();
-            return rs;
+            return stmt.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            databaseConnection.CloseConnection(con, stmt);
+            LOGGER.log(Level.SEVERE, "Error removing product with ID: " + productId + " from cart with ID: " + idCart
+                    + " for user with ID: " + userId, ex);
         }
 
-        return rs;
+        return 0;
+    }
+
+    private ProductCart mapResultSetToProductCart(ResultSet rs) throws SQLException {
+        ProductCart product = new ProductCart();
+        product.setIdCart(rs.getInt("id_cart"));
+        product.setId(rs.getInt("id"));
+        product.setImagePath(rs.getString("imagePath"));
+        product.setName(rs.getString("name"));
+        product.setDescription(rs.getString("description"));
+        product.setPrice(rs.getDouble("price"));
+        return product;
     }
 }

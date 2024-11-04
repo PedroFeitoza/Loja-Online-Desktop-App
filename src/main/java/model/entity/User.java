@@ -1,13 +1,11 @@
 package model.entity;
 
-//Dados do User
 public class User {
     private int id;
     private String nome;
     private String email;
     private String senha;
 
-    // Constructor
     public User(String oNome, String oEmail, String aSenha, int oId) {
         this.nome = oNome;
         this.email = oEmail;
@@ -15,7 +13,6 @@ public class User {
         this.id = oId;
     }
 
-    // Get & Set
     public String getNome() {
         return nome;
     }

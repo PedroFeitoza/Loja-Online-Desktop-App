@@ -2,9 +2,9 @@ package model.interfaces.DAO;
 
 public interface IUserDAO {
 
-    public int Read(String name, String password);
+    public int read(String name, String password);
 
-    public String ReadById(int userId);
+    public String readById(int userId);
 
-    public boolean Create(String name, String email, String password);
+    public boolean create(String name, String email, String password);
 }

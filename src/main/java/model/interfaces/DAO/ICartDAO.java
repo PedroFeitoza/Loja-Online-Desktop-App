@@ -1,15 +1,16 @@
 package model.interfaces.DAO;
 
 import java.util.List;
-import model.entity.ProductCart;
+
+import model.dtos.ProductCart;
 
 public interface ICartDAO {
 
-    public List<ProductCart> ReadByUserId(int userId);
+    public List<ProductCart> readByUserId(int userId);
 
-    public int Create(int userId, int productId);
+    public int create(int userId, int productId);
 
-    public int Delete(int idUser);
+    public int delete(int idUser);
 
-    public int Delete(int idCart, int idUser, int idProduct);
+    public int delete(int idCart, int idUser, int idProduct);
 }

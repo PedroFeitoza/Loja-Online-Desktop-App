@@ -1,95 +1,81 @@
 package model.DAO;
 
 import model.DAO.connection.DatabaseConnection;
+import model.interfaces.DAO.IUserDAO;
+import model.interfaces.connection.IDatabaseConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.interfaces.DAO.IUserDAO;
-import model.interfaces.connection.IDatabaseConnection;
 
 public class UserDAO implements IUserDAO {
 
+    private static final Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
     private final IDatabaseConnection databaseConnection = new DatabaseConnection();
 
     @Override
-    public int Read(String name, String password) {
-        Connection con = databaseConnection.GetConnection();
+    public int read(String name, String password) {
+        String query = "SELECT id FROM user WHERE name = ? AND password = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
+        try (Connection con = databaseConnection.getConnection();
+                PreparedStatement stmt = con.prepareStatement(query)) {
 
-        try {
-            String query = "SELECT id FROM user WHERE name = ? AND password = ?";
-            stmt = con.prepareStatement(query);
             stmt.setString(1, name);
             stmt.setString(2, password);
 
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt("id");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            databaseConnection.CloseConnection(con, stmt, rs);
+            LOGGER.log(Level.SEVERE, "Error reading user by name and password", ex);
         }
 
         return 0;
     }
 
     @Override
-    public String ReadById(int userId) {
-        Connection con = databaseConnection.GetConnection();
+    public String readById(int userId) {
+        String query = "SELECT name FROM user WHERE id = ?";
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
+        try (Connection con = databaseConnection.getConnection();
+                PreparedStatement stmt = con.prepareStatement(query)) {
 
-        try {
-            String query = "SELECT name FROM user WHERE id = ?";
-            stmt = con.prepareStatement(query);
             stmt.setInt(1, userId);
 
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getString("name");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("name");
+                }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            databaseConnection.CloseConnection(con, stmt, rs);
+            LOGGER.log(Level.SEVERE, "Error reading user by ID", ex);
         }
 
-        return null;
+        return null; // Retorno nulo indica que o usuário não foi encontrado
     }
 
     @Override
-    public boolean Create(String name, String email, String password) {
-        Connection con = databaseConnection.GetConnection();
-        PreparedStatement stmt = null;
-        int rs;
+    public boolean create(String name, String email, String password) {
+        String query = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
 
-        try {
-            String query = "INSERT INTO user VALUES(0,?,?,?);";
-            stmt = con.prepareStatement(query);
+        try (Connection con = databaseConnection.getConnection();
+                PreparedStatement stmt = con.prepareStatement(query)) {
+
             stmt.setString(1, name);
             stmt.setString(2, email);
             stmt.setString(3, password);
 
-            rs = stmt.executeUpdate();
-
-            return rs != 0;
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException ex) {
-            Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            databaseConnection.CloseConnection(con, stmt);
+            LOGGER.log(Level.SEVERE, "Error creating user", ex);
         }
 
         return false;
     }
-
 }

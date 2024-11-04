@@ -1,7 +1,7 @@
 package model.entity;
 
 public class Product {
-    
+
     private int id;
     private String imagePath;
     private String name;
@@ -15,10 +15,10 @@ public class Product {
         this.description = descricao;
         this.price = valor;
     }
-    
-    public Product() {}
-    
-        // Getter e Setter para id
+
+    public Product() {
+    }
+
     public int getId() {
         return id;
     }
@@ -27,7 +27,6 @@ public class Product {
         this.id = id;
     }
 
-    // Getter e Setter para imagePath
     public String getImagePath() {
         return imagePath;
     }
@@ -36,7 +35,6 @@ public class Product {
         this.imagePath = imagePath;
     }
 
-    // Getter e Setter para name
     public String getName() {
         return name;
     }
@@ -45,7 +43,6 @@ public class Product {
         this.name = name;
     }
 
-    // Getter e Setter para description
     public String getDescription() {
         return description;
     }
@@ -54,7 +51,6 @@ public class Product {
         this.description = description;
     }
 
-    // Getter e Setter para price
     public double getPrice() {
         return price;
     }

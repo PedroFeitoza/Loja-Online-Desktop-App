@@ -38,5 +38,4 @@ public class Cart {
     public void SetIdProduct(int id) {
         _idProduct = id;
     }
-
 }

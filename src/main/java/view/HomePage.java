@@ -17,11 +17,12 @@ import static javax.swing.SwingConstants.CENTER;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
+
+import model.dtos.ProductCart;
 import model.entity.Product;
-import model.entity.ProductCart;
 import model.enums.Operation;
 
-public class Home extends javax.swing.JFrame {
+public class HomePage extends javax.swing.JFrame {
 
     private List<Product> produtos;
     private List<ProductCart> produtosCart;
@@ -31,11 +32,11 @@ public class Home extends javax.swing.JFrame {
         return this.userId;
     }
 
-    public Home() {
+    public HomePage() {
         initComponents();
     }
 
-    public Home(int userId) {
+    public HomePage(int userId) {
         initComponents();
         this.userId = userId;
         DefaultTableModel tableModelProduct = (DefaultTableModel) jTableProduct.getModel();
@@ -86,7 +87,7 @@ public class Home extends javax.swing.JFrame {
 
     private void GetUserName() {
         IUserController controller = new UserController();
-        String user = controller.GetUserName(this.userId);
+        String user = controller.getUserName(this.userId);
         jLabelUser.setText("Welcome, " + user);
     }
 
@@ -111,7 +112,7 @@ public class Home extends javax.swing.JFrame {
                 // Ajuste a imagem para caber na célula
                 return icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
             } catch (Exception ex) {
-                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                 ImageIcon iconDefault = new ImageIcon(getClass().getResource("/images/logo.png"));
                 return iconDefault.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
             }
@@ -123,7 +124,7 @@ public class Home extends javax.swing.JFrame {
         modelo.setNumRows(0);
         ProductController pdao = new ProductController();
 
-        produtos = pdao.GetAll();
+        produtos = pdao.getAll();
 
         for (Product p : produtos) {
             modelo.addRow(new Object[]{
@@ -142,7 +143,7 @@ public class Home extends javax.swing.JFrame {
         modelo.setNumRows(0);
         ICartController controller = new CartController();
         jTableCart.setBackground(new Color(26, 42, 59));
-        produtosCart = controller.GetAll(this.userId);
+        produtosCart = controller.getProductsInCart(this.userId);
 
         for (Product p : produtosCart) {
             modelo.addRow(new Object[]{
@@ -298,7 +299,6 @@ public class Home extends javax.swing.JFrame {
                         .addGroup(jPanelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(jLabelExit))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -487,12 +487,13 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane2))
             .addGroup(jPanelCartLayout.createSequentialGroup()
-                .addGap(462, 462, 462)
-                .addComponent(jButtonBuyCart, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(510, Short.MAX_VALUE))
-            .addGroup(jPanelCartLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabel5)
+                .addGroup(jPanelCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelCartLayout.createSequentialGroup()
+                        .addGap(462, 462, 462)
+                        .addComponent(jButtonBuyCart, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelCartLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(jLabel5)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelCartLayout.setVerticalGroup(
@@ -543,7 +544,7 @@ public class Home extends javax.swing.JFrame {
             .addGroup(jPanelHomeLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(590, Short.MAX_VALUE))
+                .addContainerGap(602, Short.MAX_VALUE))
             .addGroup(jPanelHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanelHomeLayout.createSequentialGroup()
                     .addGap(354, 354, 354)
@@ -604,7 +605,7 @@ public class Home extends javax.swing.JFrame {
 
     private void jMenuItemAdminAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAdminAddBtnActionPerformed
         // TODO add your handling code here:
-        ProductManager manager = new ProductManager(this, Operation.Add);
+        ProductManagerModal manager = new ProductManagerModal(this, Operation.Add);
         jLabel3.add(manager);
         manager.setVisible(true);
 
@@ -613,8 +614,10 @@ public class Home extends javax.swing.JFrame {
         try {
             manager.setSelected(true);// Traz o JInternalFrame para frente
         } catch (PropertyVetoException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        // Dá o foco ao JInternalFrame
 
         // Dá o foco ao JInternalFrame
 
@@ -634,7 +637,7 @@ public class Home extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) jTableProduct.getModel();
         modelo.setNumRows(0);
 
-        produtos = controller.GetByName(txtFieldSearch.getText());
+        produtos = controller.getByName(txtFieldSearch.getText());
 
         for (Product p : produtos) {
             modelo.addRow(new Object[]{
@@ -655,7 +658,7 @@ public class Home extends javax.swing.JFrame {
     private void jButtonBuyCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuyCartActionPerformed
         // TODO add your handling code here:
         ICartController controller = new CartController();
-        controller.Buy(this.userId);
+        controller.completePurchase(this.userId);
         this.updateCartTable();
         JOptionPane.showMessageDialog(this, "Compra Realizada com sucesso");
     }//GEN-LAST:event_jButtonBuyCartActionPerformed
@@ -666,7 +669,7 @@ public class Home extends javax.swing.JFrame {
 
     private void jMenuItemAdminEditBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAdminEditBtnActionPerformed
 // TODO add your handling code here:
-        ProductManager manager = new ProductManager(this, Operation.Edit);
+        ProductManagerModal manager = new ProductManagerModal(this, Operation.Edit);
         jLabel3.add(manager);
         manager.setVisible(true);
 
@@ -675,12 +678,12 @@ public class Home extends javax.swing.JFrame {
         try {
             manager.setSelected(true);// Traz o JInternalFrame para frente
         } catch (PropertyVetoException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jMenuItemAdminEditBtnActionPerformed
 
     private void jMenuItemAdminDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAdminDeleteBtnActionPerformed
-        ProductManager manager = new ProductManager(this, Operation.Delete);
+        ProductManagerModal manager = new ProductManagerModal(this, Operation.Delete);
         jLabel3.add(manager);
         manager.setVisible(true);
 
@@ -689,11 +692,11 @@ public class Home extends javax.swing.JFrame {
         try {
             manager.setSelected(true);// Traz o JInternalFrame para frente
         } catch (PropertyVetoException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }    }//GEN-LAST:event_jMenuItemAdminDeleteBtnActionPerformed
 
     private void jLabelExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelExitMouseClicked
-        Login login = new Login();
+        LoginPage login = new LoginPage();
         login.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabelExitMouseClicked
@@ -705,7 +708,7 @@ public class Home extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Home().setVisible(true);
+                new HomePage().setVisible(true);
             }
         });
     }
@@ -743,7 +746,7 @@ public class Home extends javax.swing.JFrame {
         private final JButton btnCarrinho = new JButton();
         private final ImageRenderer renderer = new ImageRenderer();
 
-        public ButtonEditor(Home home) {
+        public ButtonEditor(HomePage home) {
             setBackground(new Color(26, 42, 59));
             panel.setLayout(new FlowLayout(FlowLayout.CENTER));
             btnCompra.setBackground(Color.GREEN);
@@ -764,7 +767,7 @@ public class Home extends javax.swing.JFrame {
                 int row = jTableProduct.getSelectedRow();
                 Product produto = home.getProductAtRow(row); // Obter o produto
                 ICartController controller = new CartController();
-                controller.Add(home.getUserId(), produto.getId());
+                controller.addProductToCart(home.getUserId(), produto.getId());
                 home.updateCartTable();
                 JOptionPane.showMessageDialog(panel, "Added to cart: " + produto.getName());
                 stopCellEditing();
@@ -807,7 +810,7 @@ public class Home extends javax.swing.JFrame {
         private final JButton btnDelete = new JButton();
         private final ImageRenderer renderer = new ImageRenderer();
 
-        public ButtonCartDeleteEditor(Home home) {
+        public ButtonCartDeleteEditor(HomePage home) {
             setBackground(new Color(26, 42, 59));
             panel.setLayout(new FlowLayout(FlowLayout.CENTER));
             btnDelete.setSize(25, 25);
@@ -819,7 +822,7 @@ public class Home extends javax.swing.JFrame {
                 int row = jTableCart.getSelectedRow();
                 ProductCart produto = home.getProductFromCartAtRow(row);
                 ICartController controller = new CartController();
-                controller.RemoveProduct(produto.getIdCart(), home.userId, produto.getId());
+                controller.removeProductFromCart(produto.getIdCart(), home.userId, produto.getId());
                 stopCellEditing();
                 readJTableCart();
             });

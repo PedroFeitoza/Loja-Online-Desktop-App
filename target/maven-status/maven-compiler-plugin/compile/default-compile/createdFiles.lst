@@ -1,12 +1,2 @@
-view\Home$8.class
-view\Home$5.class
-view\Home$ButtonCartDeleteEditor.class
-controller\ProductController$1.class
-view\Home$13.class
-view\Home$4.class
-view\ProductManager.class
-view\Home$7.class
-model\entity\ProductCart.class
-view\Home$6.class
+view\ProductManagerModal$5.class
 model\enums\Operation.class
-view\Home$ButtonCartDeleteRenderer.class

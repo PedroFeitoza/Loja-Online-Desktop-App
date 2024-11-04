@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public interface IDatabaseConnection {
-    public Connection GetConnection();
-    public void CloseConnection(Connection con);
-    public void CloseConnection(Connection con, PreparedStatement stmt);
-    public void CloseConnection(Connection con, PreparedStatement stmt, ResultSet rs);
+    public Connection getConnection();
+
+    public void closeConnection(Connection con);
+
+    public void closeConnection(Connection con, PreparedStatement stmt);
+
+    public void closeConnection(Connection con, PreparedStatement stmt, ResultSet rs);
 }
