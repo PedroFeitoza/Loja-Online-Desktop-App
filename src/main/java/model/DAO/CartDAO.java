@@ -22,7 +22,7 @@ public class CartDAO implements ICartDAO {
     @Override
     public List<ProductCart> readByUserId(int userId) {
         String query = """
-                SELECT cart.id_cart, product.id, product.imagePath, product.name, product.description, product.price
+                SELECT cart.id_cart, product.id, product.image_path, product.name, product.description, product.price
                 FROM product
                 INNER JOIN cart ON product.id = cart.id_product
                 WHERE cart.id_user = ?;
@@ -103,7 +103,7 @@ public class CartDAO implements ICartDAO {
         ProductCart product = new ProductCart();
         product.setIdCart(rs.getInt("id_cart"));
         product.setId(rs.getInt("id"));
-        product.setImagePath(rs.getString("imagePath"));
+        product.setImagePath(rs.getString("image_path"));
         product.setName(rs.getString("name"));
         product.setDescription(rs.getString("description"));
         product.setPrice(rs.getDouble("price"));

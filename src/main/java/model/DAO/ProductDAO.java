@@ -64,7 +64,7 @@ public class ProductDAO implements IProductDAO {
 
     @Override
     public int create(String name, String imagePath, String description, double price) {
-        String query = "INSERT INTO product (imagePath, name, description, price) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO product (image_path, name, description, price) VALUES (?, ?, ?, ?)";
 
         try (Connection con = databaseConnection.getConnection();
                 PreparedStatement stmt = con.prepareStatement(query)) {
@@ -84,7 +84,7 @@ public class ProductDAO implements IProductDAO {
 
     @Override
     public int update(int id, String name, String imagePath, String description, double price) {
-        String query = "UPDATE product SET imagePath = ?, name = ?, description = ?, price = ? WHERE id = ?";
+        String query = "UPDATE product SET image_path = ?, name = ?, description = ?, price = ? WHERE id = ?";
 
         try (Connection con = databaseConnection.getConnection();
                 PreparedStatement stmt = con.prepareStatement(query)) {
@@ -122,7 +122,7 @@ public class ProductDAO implements IProductDAO {
     private Product mapResultSetToProduct(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setId(rs.getInt("id"));
-        product.setImagePath(rs.getString("imagePath"));
+        product.setImagePath(rs.getString("image_path"));
         product.setName(rs.getString("name"));
         product.setDescription(rs.getString("description"));
         product.setPrice(rs.getDouble("price"));

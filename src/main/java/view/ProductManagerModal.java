@@ -191,12 +191,14 @@ public class ProductManagerModal extends javax.swing.JInternalFrame {
     }
 
     private boolean validateFields() {
-        if (operation == Operation.Add || operation == Operation.Edit && (!isFieldNotEmpty(jTextFieldName, "Nome do produto é obrigatório!")
+        if (operation == Operation.Add || operation == Operation.Edit) {
+            if (!isFieldNotEmpty(jTextFieldName, "Nome do produto é obrigatório!")
                 || !isFieldNotEmpty(jTextFieldImage, "Imagem do produto é obrigatória!")
                 || !isFieldNotEmpty(jTextFieldDescription, "Descrição do produto é obrigatória!")
                 || !isFieldNotEmpty(jTextFieldPrice, "Preço do produto é obrigatório!")
-                || !isPriceValid(jTextFieldPrice.getText()))) {
-            return false;
+                || !isPriceValid(jTextFieldPrice.getText())) {
+                return false;
+            }
         }
 
         if (operation == Operation.Edit && !isFieldNotEmpty(jTextFieldId, "Id é obrigatório!")) {

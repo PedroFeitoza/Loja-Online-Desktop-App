@@ -178,6 +178,7 @@ public class HomePage extends JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabelExit = new javax.swing.JLabel();
         jPanelBody = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
         jTabbedPnlHome = new javax.swing.JTabbedPane();
         jPanelStore = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -392,7 +393,7 @@ public class HomePage extends JFrame {
                     .addComponent(txtFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelSearch)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
         jPanelStoreLayout.setVerticalGroup(
             jPanelStoreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -488,20 +489,23 @@ public class HomePage extends JFrame {
 
         jTabbedPnlHome.addTab("Cart", jPanelCart);
 
+        jScrollPane3.setViewportView(jTabbedPnlHome);
+
         javax.swing.GroupLayout jPanelBodyLayout = new javax.swing.GroupLayout(jPanelBody);
         jPanelBody.setLayout(jPanelBodyLayout);
         jPanelBodyLayout.setHorizontalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelBodyLayout.createSequentialGroup()
-                .addComponent(jTabbedPnlHome, javax.swing.GroupLayout.PREFERRED_SIZE, 1353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 1353, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanelBodyLayout.setVerticalGroup(
             jPanelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelBodyLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPnlHome, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanelHomeLayout = new javax.swing.GroupLayout(jPanelHome);
@@ -780,6 +784,7 @@ public class HomePage extends JFrame {
     private javax.swing.JPanel jPanelStore;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPnlHome;
     private javax.swing.JTable jTableCart;
     private javax.swing.JTable jTableProduct;
