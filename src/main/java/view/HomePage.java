@@ -5,71 +5,85 @@ import controller.ProductController;
 import controller.UserController;
 import controller.interfaces.ICartController;
 import controller.interfaces.IUserController;
-import javax.swing.*;
-import javax.swing.table.TableCellEditor;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyVetoException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static javax.swing.SwingConstants.CENTER;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableRowSorter;
-
 import model.dtos.ProductCart;
 import model.entity.Product;
 import model.enums.Operation;
 
-public class HomePage extends javax.swing.JFrame {
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.beans.PropertyVetoException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+public class HomePage extends JFrame {
 
     private List<Product> produtos;
     private List<ProductCart> produtosCart;
     private int userId;
-
-    public int getUserId() {
-        return this.userId;
-    }
 
     public HomePage() {
         initComponents();
     }
 
     public HomePage(int userId) {
-        initComponents();
         this.userId = userId;
-        DefaultTableModel tableModelProduct = (DefaultTableModel) jTableProduct.getModel();
-        jTableProduct.setRowSorter(new TableRowSorter(tableModelProduct));
-        addGameCategories();
-        DefaultTableModel tableModelCart = (DefaultTableModel) jTableCart.getModel();
-        jTableCart.setRowSorter(new TableRowSorter(tableModelCart));
+        initComponents();
+        configureTableModels();
+        configureRenderersAndEditors();
+        loadUserAndTableData();
+    }
 
-        // Define o renderer e editor da coluna de ação
-        jTableProduct.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer()); // Coluna de logo
+    public int getUserId() {
+        return this.userId;
+    }
+
+    private void configureTableModels() {
+        DefaultTableModel tableModelProduct = (DefaultTableModel) jTableProduct.getModel();
+        jTableProduct.setRowSorter(new TableRowSorter<>(tableModelProduct));
+
+        DefaultTableModel tableModelCart = (DefaultTableModel) jTableCart.getModel();
+        jTableCart.setRowSorter(new TableRowSorter<>(tableModelCart));
+    }
+
+    private void configureRenderersAndEditors() {
+        jTableProduct.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer());
         jTableProduct.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
         jTableProduct.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(this));
 
-        jTableCart.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer()); // Coluna de logo
+        jTableCart.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer());
         jTableCart.getColumnModel().getColumn(5).setCellRenderer(new ButtonCartDeleteRenderer());
         jTableCart.getColumnModel().getColumn(5).setCellEditor(new ButtonCartDeleteEditor(this));
-
-        GetUserName();
-
-        readJTable();
-        readJTableCart();
     }
 
-    private void addGameCategories() {
+    private void loadUserAndTableData() {
+        displayUserName();
+        populateCategoryList();
+        updateProductTable();
+        updateCartTable();
+    }
+
+    private void displayUserName() {
+        IUserController controller = new UserController();
+        String user = controller.getUserName(this.userId);
+        jLabelUser.setText("Welcome, " + user);
+    }
+
+    private void populateCategoryList() {
         String[] categories = {
-            "Action", "Adventure", "RPG", "Simulation", "Strategy",
-            "Sports", "Puzzle", "Arcade", "Platformer", "Shooter",
-            "Fighting", "Horror", "Survival", "Stealth", "Open World",
-            "Sandbox", "Card", "Board", "Racing", "Rhythm",
-            "Educational", "Trivia", "Casual", "Multiplayer", "Singleplayer",
-            "MMORPG", "MOBA", "Battle Royale", "VR", "Idle",
-            "Metroidvania", "Roguelike", "Roguelite", "Point and Click", "Interactive Story",
-            "Tower Defense", "Tycoon", "Hack and Slash", "Visual Novel", "Fitness"
+                "Action", "Adventure", "RPG", "Simulation", "Strategy",
+                "Sports", "Puzzle", "Arcade", "Platformer", "Shooter",
+                "Fighting", "Horror", "Survival", "Stealth", "Open World",
+                "Sandbox", "Card", "Board", "Racing", "Rhythm",
+                "Educational", "Trivia", "Casual", "Multiplayer", "Singleplayer",
+                "MMORPG", "MOBA", "Battle Royale", "VR", "Idle",
+                "Metroidvania", "Roguelike", "Roguelite", "Point and Click", "Interactive Story",
+                "Tower Defense", "Tycoon", "Hack and Slash", "Visual Novel", "Fitness"
         };
 
         for (String category : categories) {
@@ -78,82 +92,59 @@ public class HomePage extends javax.swing.JFrame {
     }
 
     public void updateProductTable() {
-        readJTable(); // Recarrega a tabela
+        DefaultTableModel model = (DefaultTableModel) jTableProduct.getModel();
+        model.setRowCount(0); // Limpa a tabela
+        produtos = new ProductController().getAll();
+
+        for (Product p : produtos) {
+            model.addRow(new Object[] {
+                    p.getId(),
+                    p.getImagePath(),
+                    p.getName(),
+                    p.getDescription(),
+                    p.getPrice(),
+                    "Actions"
+            });
+        }
     }
 
     public void updateCartTable() {
-        readJTableCart(); // Recarrega a tabela
+        DefaultTableModel model = (DefaultTableModel) jTableCart.getModel();
+        model.setRowCount(0); // Limpa a tabela
+        jTableCart.setBackground(new Color(26, 42, 59));
+        produtosCart = new CartController().getProductsInCart(this.userId);
+
+        for (ProductCart pc : produtosCart) {
+            model.addRow(new Object[] {
+                    pc.getId(),
+                    pc.getImagePath(),
+                    pc.getName(),
+                    pc.getDescription(),
+                    pc.getPrice(),
+                    "Actions"
+            });
+        }
     }
 
-    private void GetUserName() {
-        IUserController controller = new UserController();
-        String user = controller.getUserName(this.userId);
-        jLabelUser.setText("Welcome, " + user);
-    }
-
-    // Renderer para exibir imagens na coluna da tabela
-    private static class ImageRenderer extends JLabel implements TableCellRenderer {
-
+    private class ImageRenderer extends JLabel implements TableCellRenderer {
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setIcon(new ImageIcon(GetImage(value, 100, 100)));
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                int row, int column) {
+            setIcon(new ImageIcon(loadImage(value, 100, 100)));
             setHorizontalAlignment(CENTER);
             return this;
         }
 
-        public Image GetImage(Object imagePath, int width, int height) {
-            // Caminho relativo para a pasta resources
+        private Image loadImage(Object imagePath, int width, int height) {
             String path = "/images/" + imagePath;
-
             try {
-                // Obtém o recurso de dentro de resources
                 ImageIcon icon = new ImageIcon(getClass().getResource(path));
-
-                // Ajuste a imagem para caber na célula
                 return icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
             } catch (Exception ex) {
                 Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                 ImageIcon iconDefault = new ImageIcon(getClass().getResource("/images/logo.png"));
                 return iconDefault.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
             }
-        }
-    }
-
-    private void readJTable() {
-        DefaultTableModel modelo = (DefaultTableModel) jTableProduct.getModel();
-        modelo.setNumRows(0);
-        ProductController pdao = new ProductController();
-
-        produtos = pdao.getAll();
-
-        for (Product p : produtos) {
-            modelo.addRow(new Object[]{
-                p.getId(),
-                p.getImagePath(),
-                p.getName(),
-                p.getDescription(),
-                p.getPrice(),
-                "Ações"
-            });
-        }
-    }
-
-    private void readJTableCart() {
-        DefaultTableModel modelo = (DefaultTableModel) jTableCart.getModel();
-        modelo.setNumRows(0);
-        ICartController controller = new CartController();
-        jTableCart.setBackground(new Color(26, 42, 59));
-        produtosCart = controller.getProductsInCart(this.userId);
-
-        for (Product p : produtosCart) {
-            modelo.addRow(new Object[]{
-                p.getId(),
-                p.getImagePath(),
-                p.getName(),
-                p.getDescription(),
-                p.getPrice(),
-                "Ações"
-            });
         }
     }
 
@@ -303,6 +294,7 @@ public class HomePage extends javax.swing.JFrame {
         );
 
         jTabbedPnlHome.setBackground(new java.awt.Color(15, 18, 54));
+        jTabbedPnlHome.setForeground(new java.awt.Color(255, 255, 255));
 
         jPanelStore.setBackground(new java.awt.Color(15, 18, 54));
         jPanelStore.setMaximumSize(new java.awt.Dimension(1280, 720));
@@ -320,7 +312,7 @@ public class HomePage extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Logo", "Nome", "Descrição", "Valor", "Ação"
+                "Id", "Logo", "Name", "Description", "Price", ""
             }
         ) {
             Class[] types = new Class [] {
@@ -346,11 +338,6 @@ public class HomePage extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTableProduct);
 
         txtFieldSearch.setToolTipText("Procure por um nome de jogo");
-        txtFieldSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFieldSearchActionPerformed(evt);
-            }
-        });
         txtFieldSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtFieldSearchKeyReleased(evt);
@@ -365,11 +352,6 @@ public class HomePage extends javax.swing.JFrame {
 
         listCategories.setBackground(new java.awt.Color(15, 10, 25));
         listCategories.setForeground(new java.awt.Color(255, 255, 255));
-        listCategories.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                listCategoriesActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanelCategoryLayout = new javax.swing.GroupLayout(jPanelCategory);
         jPanelCategory.setLayout(jPanelCategoryLayout);
@@ -442,7 +424,7 @@ public class HomePage extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Logo", "Nome", "Descrição", "Valor", "Ação"
+                "Id", "Logo", "Name", "Description", "Price", ""
             }
         ) {
             Class[] types = new Class [] {
@@ -467,12 +449,8 @@ public class HomePage extends javax.swing.JFrame {
         jLabel5.setText("You are buying");
 
         jButtonBuyCart.setBackground(new java.awt.Color(0, 153, 0));
+        jButtonBuyCart.setForeground(new java.awt.Color(255, 255, 255));
         jButtonBuyCart.setText("BUY");
-        jButtonBuyCart.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButtonBuyCartMouseClicked(evt);
-            }
-        });
         jButtonBuyCart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBuyCartActionPerformed(evt);
@@ -562,11 +540,6 @@ public class HomePage extends javax.swing.JFrame {
         jMenuItemAdminAddBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/adicionar.png"))); // NOI18N
         jMenuItemAdminAddBtn.setText("Add Product");
         jMenuItemAdminAddBtn.setPreferredSize(new java.awt.Dimension(10, 30));
-        jMenuItemAdminAddBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenuItemAdminAddBtnMouseClicked(evt);
-            }
-        });
         jMenuItemAdminAddBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemAdminAddBtnActionPerformed(evt);
@@ -603,131 +576,14 @@ public class HomePage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItemAdminAddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAdminAddBtnActionPerformed
-        // TODO add your handling code here:
-        ProductManagerModal manager = new ProductManagerModal(this, Operation.Add);
-        jLabel3.add(manager);
-        manager.setVisible(true);
-
-        manager.toFront();
-        // Traz o JInternalFrame para frente
-        try {
-            manager.setSelected(true);// Traz o JInternalFrame para frente
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        // Dá o foco ao JInternalFrame
-
-        // Dá o foco ao JInternalFrame
-
-    }//GEN-LAST:event_jMenuItemAdminAddBtnActionPerformed
-
-    private void jMenuItemAdminAddBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItemAdminAddBtnMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemAdminAddBtnMouseClicked
-
-    private void listCategoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listCategoriesActionPerformed
-
-    }//GEN-LAST:event_listCategoriesActionPerformed
-
-    private void txtFieldSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFieldSearchKeyReleased
-        ProductController controller = new ProductController();
-
-        DefaultTableModel modelo = (DefaultTableModel) jTableProduct.getModel();
-        modelo.setNumRows(0);
-
-        produtos = controller.getByName(txtFieldSearch.getText());
-
-        for (Product p : produtos) {
-            modelo.addRow(new Object[]{
-                p.getId(),
-                p.getImagePath(),
-                p.getName(),
-                p.getDescription(),
-                p.getPrice(),
-                "Ações"
-            });
-        }
-    }//GEN-LAST:event_txtFieldSearchKeyReleased
-
-    private void txtFieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFieldSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFieldSearchActionPerformed
-
-    private void jButtonBuyCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuyCartActionPerformed
-        // TODO add your handling code here:
-        ICartController controller = new CartController();
-        controller.completePurchase(this.userId);
-        this.updateCartTable();
-        JOptionPane.showMessageDialog(this, "Compra Realizada com sucesso");
-    }//GEN-LAST:event_jButtonBuyCartActionPerformed
-
-    private void jButtonBuyCartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonBuyCartMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonBuyCartMouseClicked
-
-    private void jMenuItemAdminEditBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAdminEditBtnActionPerformed
-// TODO add your handling code here:
-        ProductManagerModal manager = new ProductManagerModal(this, Operation.Edit);
-        jLabel3.add(manager);
-        manager.setVisible(true);
-
-        manager.toFront();
-        // Traz o JInternalFrame para frente
-        try {
-            manager.setSelected(true);// Traz o JInternalFrame para frente
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jMenuItemAdminEditBtnActionPerformed
-
-    private void jMenuItemAdminDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAdminDeleteBtnActionPerformed
-        ProductManagerModal manager = new ProductManagerModal(this, Operation.Delete);
-        jLabel3.add(manager);
-        manager.setVisible(true);
-
-        manager.toFront();
-        // Traz o JInternalFrame para frente
-        try {
-            manager.setSelected(true);// Traz o JInternalFrame para frente
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-        }    }//GEN-LAST:event_jMenuItemAdminDeleteBtnActionPerformed
-
-    private void jLabelExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelExitMouseClicked
-        LoginPage login = new LoginPage();
-        login.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jLabelExitMouseClicked
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new HomePage().setVisible(true);
-            }
-        });
-    }
-
-    private static class ButtonRenderer extends JPanel implements TableCellRenderer {
-
+    private class ButtonRenderer extends JPanel implements TableCellRenderer {
         private final JButton btnCompra = new JButton("BUY");
-        private final JButton btnCarrinho = new JButton();
-        private final ImageRenderer renderer = new ImageRenderer();
+        private final JButton btnCarrinho = new JButton(new ImageIcon(new ImageRenderer().loadImage("carrinho.png", 30, 30)));
 
         public ButtonRenderer() {
-            setAlignmentY(CENTER);
-            setAlignmentX(CENTER);
             setBackground(new Color(26, 42, 59));
             setLayout(new FlowLayout(FlowLayout.CENTER));
-            btnCompra.setAlignmentY(CENTER_ALIGNMENT);
             btnCompra.setBackground(Color.GREEN);
-            btnCompra.setSize(100, 30);
-            btnCarrinho.setIcon(new ImageIcon(renderer.GetImage("carrinho.png", 30, 30)));
             add(btnCompra);
             add(btnCarrinho);
         }
@@ -740,42 +596,40 @@ public class HomePage extends javax.swing.JFrame {
     }
 
     private class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
-
-        private final JPanel panel = new JPanel();
+        private final JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         private final JButton btnCompra = new JButton("BUY");
-        private final JButton btnCarrinho = new JButton();
-        private final ImageRenderer renderer = new ImageRenderer();
+        private final JButton btnCarrinho = new JButton(new ImageIcon(new ImageRenderer().loadImage("carrinho.png", 30, 30)));
 
         public ButtonEditor(HomePage home) {
             setBackground(new Color(26, 42, 59));
-            panel.setLayout(new FlowLayout(FlowLayout.CENTER));
             btnCompra.setBackground(Color.GREEN);
-            btnCompra.setSize(70, 20);
-            btnCarrinho.setIcon(new ImageIcon(renderer.GetImage("carrinho.png", 30, 30)));
             panel.add(btnCompra);
             panel.add(btnCarrinho);
 
-            // Configura os eventos de ação dos botões
-            btnCompra.addActionListener((ActionEvent e) -> {
-                int row = jTableProduct.getSelectedRow();
-                Product produto = home.getProductAtRow(row);
-                JOptionPane.showMessageDialog(panel, produto.getName() + " purchased successfully, key will be sent by email");
-                stopCellEditing();
-            });
+            btnCompra.addActionListener(e -> handleBuyAction(home));
+            btnCarrinho.addActionListener(e -> handleAddToCartAction(home));
+        }
 
-            btnCarrinho.addActionListener((ActionEvent e) -> {
-                int row = jTableProduct.getSelectedRow();
-                Product produto = home.getProductAtRow(row); // Obter o produto
-                ICartController controller = new CartController();
-                controller.addProductToCart(home.getUserId(), produto.getId());
-                home.updateCartTable();
-                JOptionPane.showMessageDialog(panel, "Added to cart: " + produto.getName());
-                stopCellEditing();
-            });
+        private void handleBuyAction(HomePage home) {
+            int row = jTableProduct.getSelectedRow();
+            Product produto = home.getProductAtRow(row);
+            JOptionPane.showMessageDialog(panel,
+                    produto.getName() + " purchased successfully, key will be sent by email");
+            stopCellEditing();
+        }
+
+        private void handleAddToCartAction(HomePage home) {
+            int row = jTableProduct.getSelectedRow();
+            Product produto = home.getProductAtRow(row);
+            new CartController().addProductToCart(home.getUserId(), produto.getId());
+            home.updateCartTable();
+            JOptionPane.showMessageDialog(panel, "Added to cart: " + produto.getName());
+            stopCellEditing();
         }
 
         @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+                int column) {
             return panel;
         }
 
@@ -785,15 +639,11 @@ public class HomePage extends javax.swing.JFrame {
         }
     }
 
-    private static class ButtonCartDeleteRenderer extends JPanel implements TableCellRenderer {
-
-        private final JButton btnDelete = new JButton();
-        private final ImageRenderer renderer = new ImageRenderer();
-
+    private class ButtonCartDeleteRenderer extends JPanel implements TableCellRenderer {
         public ButtonCartDeleteRenderer() {
             setBackground(new Color(26, 42, 59));
-            btnDelete.setSize(25, 25);
-            btnDelete.setIcon(new ImageIcon(renderer.GetImage("excluir.png", 20, 20)));
+            JButton btnDelete = new JButton(new ImageIcon(new ImageRenderer().loadImage("excluir.png", 20, 20)));
+            setLayout(new FlowLayout(FlowLayout.CENTER));
             add(btnDelete);
         }
 
@@ -805,27 +655,21 @@ public class HomePage extends javax.swing.JFrame {
     }
 
     private class ButtonCartDeleteEditor extends AbstractCellEditor implements TableCellEditor {
-
-        private final JPanel panel = new JPanel();
-        private final JButton btnDelete = new JButton();
-        private final ImageRenderer renderer = new ImageRenderer();
+        private final JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        private final JButton btnDelete = new JButton(new ImageIcon(new ImageRenderer().loadImage("excluir.png", 20, 20)));
 
         public ButtonCartDeleteEditor(HomePage home) {
             setBackground(new Color(26, 42, 59));
-            panel.setLayout(new FlowLayout(FlowLayout.CENTER));
-            btnDelete.setSize(25, 25);
-            btnDelete.setIcon(new ImageIcon(renderer.GetImage("excluir.png", 20, 20)));
             panel.add(btnDelete);
+            btnDelete.addActionListener(e -> handleDeleteAction(home));
+        }
 
-            // Configura os eventos de ação dos botões
-            btnDelete.addActionListener((ActionEvent e) -> {
-                int row = jTableCart.getSelectedRow();
-                ProductCart produto = home.getProductFromCartAtRow(row);
-                ICartController controller = new CartController();
-                controller.removeProductFromCart(produto.getIdCart(), home.userId, produto.getId());
-                stopCellEditing();
-                readJTableCart();
-            });
+        private void handleDeleteAction(HomePage home) {
+            int row = jTableCart.getSelectedRow();
+            ProductCart produto = home.getProductFromCartAtRow(row);
+            new CartController().removeProductFromCart(produto.getIdCart(), home.userId, produto.getId());
+            home.updateCartTable();
+            stopCellEditing();
         }
 
         @Override
@@ -838,6 +682,78 @@ public class HomePage extends javax.swing.JFrame {
             return null;
         }
     }
+
+    private void jButtonBuyCartActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButtonBuyCartActionPerformed
+        ICartController controller = new CartController();
+        controller.completePurchase(this.userId);
+        this.updateCartTable();
+        JOptionPane.showMessageDialog(this, "Purchase completed successfully! The game keys will be sent to your email.");
+    }// GEN-LAST:event_jButtonBuyCartActionPerformed
+
+    private void jLabelExitMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jLabelExitMouseClicked
+        LoginPage login = new LoginPage();
+        login.setVisible(true);
+        this.dispose();
+    }// GEN-LAST:event_jLabelExitMouseClicked
+
+    private void txtFieldSearchKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtFieldSearchKeyReleased
+        ProductController controller = new ProductController();
+
+        DefaultTableModel modelo = (DefaultTableModel) jTableProduct.getModel();
+        modelo.setNumRows(0);
+
+        produtos = controller.getByName(txtFieldSearch.getText());
+
+        for (Product p : produtos) {
+            modelo.addRow(new Object[] {
+                    p.getId(),
+                    p.getImagePath(),
+                    p.getName(),
+                    p.getDescription(),
+                    p.getPrice(),
+                    ""
+            });
+        }
+    }// GEN-LAST:event_txtFieldSearchKeyReleased
+
+    private void jMenuItemAdminAddBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemAdminAddBtnActionPerformed
+        ProductManagerModal manager = new ProductManagerModal(this, Operation.Add);
+        jLabel3.add(manager);
+        manager.setVisible(true);
+
+        manager.toFront();
+        try {
+            manager.setSelected(true);// Traz o JInternalFrame para frente
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }// GEN-LAST:event_jMenuItemAdminAddBtnActionPerformed
+
+    private void jMenuItemAdminEditBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemAdminEditBtnActionPerformed
+        ProductManagerModal manager = new ProductManagerModal(this, Operation.Edit);
+        jLabel3.add(manager);
+        manager.setVisible(true);
+        manager.toFront();
+        try {
+            manager.setSelected(true);// Traz o JInternalFrame para frente
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }// GEN-LAST:event_jMenuItemAdminEditBtnActionPerformed
+
+    private void jMenuItemAdminDeleteBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemAdminDeleteBtnActionPerformed
+        ProductManagerModal manager = new ProductManagerModal(this, Operation.Delete);
+        jLabel3.add(manager);
+        manager.setVisible(true);
+
+        manager.toFront();
+        // Traz o JInternalFrame para frente
+        try {
+            manager.setSelected(true);// Traz o JInternalFrame para frente
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }// GEN-LAST:event_jMenuItemAdminDeleteBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

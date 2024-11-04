@@ -75,23 +75,23 @@ public class RegisterPage extends javax.swing.JFrame {
         getContentPane().add(jPasswordField);
         jPasswordField.setBounds(180, 300, 160, 28);
 
-        jButtonBack.setText("VOLTAR");
+        jButtonBack.setText("BACK");
         jButtonBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBackActionPerformed(evt);
             }
         });
         getContentPane().add(jButtonBack);
-        jButtonBack.setBounds(30, 336, 74, 28);
+        jButtonBack.setBounds(30, 336, 90, 28);
 
-        jButtonConfirm.setText("CONTINUAR");
+        jButtonConfirm.setText("CONFIRM");
         jButtonConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonConfirmActionPerformed(evt);
             }
         });
         getContentPane().add(jButtonConfirm);
-        jButtonConfirm.setBounds(397, 336, 99, 28);
+        jButtonConfirm.setBounds(366, 336, 130, 28);
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/logo100x100.png"))); // NOI18N
         getContentPane().add(jLabel6);

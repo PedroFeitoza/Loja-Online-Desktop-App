@@ -29,14 +29,9 @@ public class ProductController implements IProductController {
      * 
      * @param name Nome ou parte do nome do produto
      * @return Lista de produtos correspondentes
-     * @throws IllegalArgumentException se o nome for nulo ou vazio
      */
     @Override
     public List<Product> getByName(String name) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Nome do produto não pode ser vazio.");
-        }
-
         try {
             return productDAO.readByName(name);
         } catch (Exception e) {

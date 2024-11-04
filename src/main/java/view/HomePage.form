@@ -89,7 +89,6 @@
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jMenuItemAdminAddBtnMouseClicked"/>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemAdminAddBtnActionPerformed"/>
               </Events>
             </MenuItem>
@@ -328,6 +327,9 @@
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="36" green="12" red="f" type="rgb"/>
                 </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
               </Properties>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
@@ -411,10 +413,10 @@
                               <Table columnCount="6" rowCount="4">
                                 <Column editable="false" title="Id" type="java.lang.Integer"/>
                                 <Column editable="false" title="Logo" type="java.lang.Object"/>
-                                <Column editable="false" title="Nome" type="java.lang.String"/>
-                                <Column editable="false" title="Descri&#xe7;&#xe3;o" type="java.lang.String"/>
-                                <Column editable="false" title="Valor" type="java.lang.Double"/>
-                                <Column editable="true" title="A&#xe7;&#xe3;o" type="java.lang.Object"/>
+                                <Column editable="false" title="Name" type="java.lang.String"/>
+                                <Column editable="false" title="Description" type="java.lang.String"/>
+                                <Column editable="false" title="Price" type="java.lang.Double"/>
+                                <Column editable="true" title="" type="java.lang.Object"/>
                               </Table>
                             </Property>
                             <Property name="autoscrolls" type="boolean" value="false"/>
@@ -433,7 +435,6 @@
                         <Property name="toolTipText" type="java.lang.String" value="Procure por um nome de jogo"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtFieldSearchActionPerformed"/>
                         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtFieldSearchKeyReleased"/>
                       </Events>
                     </Component>
@@ -495,9 +496,6 @@
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
                             </Property>
                           </Properties>
-                          <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listCategoriesActionPerformed"/>
-                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -590,10 +588,10 @@
                               <Table columnCount="6" rowCount="4">
                                 <Column editable="false" title="Id" type="java.lang.Integer"/>
                                 <Column editable="false" title="Logo" type="java.lang.Object"/>
-                                <Column editable="false" title="Nome" type="java.lang.String"/>
-                                <Column editable="false" title="Descri&#xe7;&#xe3;o" type="java.lang.String"/>
-                                <Column editable="false" title="Valor" type="java.lang.Double"/>
-                                <Column editable="true" title="A&#xe7;&#xe3;o" type="java.lang.Object"/>
+                                <Column editable="false" title="Name" type="java.lang.String"/>
+                                <Column editable="false" title="Description" type="java.lang.String"/>
+                                <Column editable="false" title="Price" type="java.lang.Double"/>
+                                <Column editable="true" title="" type="java.lang.Object"/>
                               </Table>
                             </Property>
                             <Property name="rowHeight" type="int" value="100"/>
@@ -614,10 +612,12 @@
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="99" red="0" type="rgb"/>
                         </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                        </Property>
                         <Property name="text" type="java.lang.String" value="BUY"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButtonBuyCartMouseClicked"/>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonBuyCartActionPerformed"/>
                       </Events>
                     </Component>
